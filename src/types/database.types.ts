@@ -997,6 +997,7 @@ export type Database = {
           stock_quantity: number
           updated_at: string
           view_count: number
+          weight_grams: number
         }
         Insert: {
           barcode?: string | null
@@ -1034,6 +1035,7 @@ export type Database = {
           stock_quantity?: number
           updated_at?: string
           view_count?: number
+          weight_grams?: number
         }
         Update: {
           barcode?: string | null
@@ -1071,6 +1073,7 @@ export type Database = {
           stock_quantity?: number
           updated_at?: string
           view_count?: number
+          weight_grams?: number
         }
         Relationships: [
           {

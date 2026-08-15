@@ -30,6 +30,7 @@ type ProductWithChildren = {
   manage_stock: boolean;
   stock_quantity: number;
   low_stock_threshold: number;
+  weight_grams: number;
   has_variants: boolean;
   is_free_delivery: boolean;
   is_featured: boolean;
@@ -109,6 +110,7 @@ export function ProductForm({
       manage_stock: product?.manage_stock ?? true,
       stock_quantity: product?.stock_quantity ?? 0,
       low_stock_threshold: product?.low_stock_threshold ?? 5,
+      weight_grams: product?.weight_grams ?? 500,
       has_variants: product?.has_variants ?? false,
       is_free_delivery: product?.is_free_delivery ?? false,
       is_featured: product?.is_featured ?? false,
@@ -316,6 +318,13 @@ export function ProductForm({
             </div>
           </div>
         )}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <FieldLabel>প্যাকেজের ওজন (গ্রাম)</FieldLabel>
+            <Input type="number" {...register("weight_grams", { valueAsNumber: true })} />
+            <p className="mt-1 text-xs text-foreground/40">ডেলিভারি চার্জ এই ওজনের উপর নির্ভর করে হিসাব হয়</p>
+          </div>
+        </div>
       </Section>
 
       {hasVariants && (

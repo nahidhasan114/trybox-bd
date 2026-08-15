@@ -19,7 +19,3 @@ export const bdDistrictsByDivision: Record<string, string[]> = {
   "রংপুর": ["রংপুর", "দিনাজপুর", "কুড়িগ্রাম", "গাইবান্ধা", "নীলফামারী", "পঞ্চগড়", "ঠাকুরগাঁও", "লালমনিরহাট"],
   "ময়মনসিংহ": ["ময়মনসিংহ", "জামালপুর", "নেত্রকোণা", "শেরপুর"],
 };
-
-export function getShippingZone(division: string): "dhaka" | "outside_dhaka" {
-  return division === "ঢাকা" ? "dhaka" : "outside_dhaka";
-}

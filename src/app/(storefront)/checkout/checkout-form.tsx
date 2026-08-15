@@ -15,8 +15,9 @@ import { useCartDetails } from "@/lib/cart/use-cart-details";
 import { getBuyNowItem, clearBuyNowItem } from "@/lib/cart/buy-now";
 import { submitOrder } from "@/lib/actions/checkout";
 import { formatBDT } from "@/lib/pricing";
-import { bdDivisions, bdDistrictsByDivision, getShippingZone } from "@/lib/bd-locations";
+import { bdDivisions, bdDistrictsByDivision } from "@/lib/bd-locations";
 import { createClient } from "@/lib/supabase/client";
+import { calculateWeightShipping, DEFAULT_SHIPPING_TIERS, type ShippingTiers } from "@/lib/shipping-calc";
 
 type FormValues = {
   customerName: string;
@@ -53,30 +54,30 @@ export function CheckoutForm({ bkashNumber, nagadNumber }: { bkashNumber: string
   const activeLines = isBuyNow ? buyNowLine ?? [] : cartLines;
   const { items, loading } = useCartDetails(activeLines);
 
-  const [shippingRates, setShippingRates] = useState<{ dhaka: number; outside: number; freeMin: { dhaka: number | null; outside: number | null } }>({
-    dhaka: 70,
-    outside: 130,
-    freeMin: { dhaka: null, outside: null },
-  });
+  const [shippingTiers, setShippingTiers] = useState<ShippingTiers>(DEFAULT_SHIPPING_TIERS);
 
   useEffect(() => {
     const supabase = createClient();
     supabase
-      .from("shipping_rules")
-      .select("zone_type, charge, free_delivery_min_order")
-      .eq("is_active", true)
+      .from("site_settings")
+      .select("key, value")
+      .in("key", [
+        "shipping_tier1_max_grams",
+        "shipping_tier1_charge",
+        "shipping_tier2_max_grams",
+        "shipping_tier2_charge",
+        "shipping_tier3_base_charge",
+        "shipping_per_kg_charge",
+        "shipping_free_min_order",
+      ])
       .then(({ data }) => {
         if (!data) return;
-        const dhaka = data.find((r) => r.zone_type === "dhaka");
-        const outside = data.find((r) => r.zone_type === "outside_dhaka");
-        setShippingRates({
-          dhaka: dhaka?.charge ?? 70,
-          outside: outside?.charge ?? 130,
-          freeMin: {
-            dhaka: dhaka?.free_delivery_min_order ?? null,
-            outside: outside?.free_delivery_min_order ?? null,
-          },
-        });
+        const tiers = { ...DEFAULT_SHIPPING_TIERS };
+        for (const row of data) {
+          const shortKey = row.key.replace("shipping_", "") as keyof ShippingTiers;
+          if (shortKey in tiers) tiers[shortKey] = Number(row.value);
+        }
+        setShippingTiers(tiers);
       });
   }, []);
 
@@ -117,10 +118,11 @@ export function CheckoutForm({ bkashNumber, nagadNumber }: { bkashNumber: string
   }, [division]);
 
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const zone = getShippingZone(division);
-  const zoneCharge = zone === "dhaka" ? shippingRates.dhaka : shippingRates.outside;
-  const freeMin = zone === "dhaka" ? shippingRates.freeMin.dhaka : shippingRates.freeMin.outside;
-  const estimatedShipping = freeMin != null && subtotal >= freeMin ? 0 : zoneCharge;
+  const totalWeightGrams = items.reduce((sum, i) => sum + i.weightGrams * i.quantity, 0);
+  const allFreeDelivery = items.length > 0 && items.every((i) => i.isFreeDelivery);
+  const weightShipping = calculateWeightShipping(totalWeightGrams, shippingTiers);
+  const meetsFreeMin = shippingTiers.free_min_order > 0 && subtotal >= shippingTiers.free_min_order;
+  const estimatedShipping = allFreeDelivery || meetsFreeMin ? 0 : weightShipping;
   const estimatedTotal = subtotal + estimatedShipping;
 
   const onSubmit = async (values: FormValues) => {

@@ -1,21 +1,18 @@
-import { createClient } from "@/lib/supabase/server";
-import { ShippingRuleRow } from "./shipping-rule-row";
+import { getShippingTiers } from "@/lib/queries/shipping";
+import { ShippingSettingsForm } from "./shipping-settings-form";
 
 export default async function AdminShippingPage() {
-  const supabase = await createClient();
-  const { data: rules } = await supabase.from("shipping_rules").select("*").order("display_order");
+  const tiers = await getShippingTiers();
 
   return (
     <div className="max-w-2xl space-y-5">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">শিপিং রুলস</h1>
-        <p className="text-sm text-foreground/60">এলাকা অনুযায়ী ডেলিভারি চার্জ নির্ধারণ করুন</p>
+        <h1 className="text-xl font-semibold text-foreground">শিপিং / ডেলিভারি চার্জ</h1>
+        <p className="text-sm text-foreground/60">
+          কার্টের মোট ওজনের উপর ভিত্তি করে ডেলিভারি চার্জ স্বয়ংক্রিয়ভাবে হিসাব হয়। এখান থেকে রেট পরিবর্তন করুন।
+        </p>
       </div>
-      <div className="space-y-4">
-        {(rules ?? []).map((rule) => (
-          <ShippingRuleRow key={rule.id} rule={rule} />
-        ))}
-      </div>
+      <ShippingSettingsForm tiers={tiers} />
     </div>
   );
 }

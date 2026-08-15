@@ -41,6 +41,7 @@ export type ProductFormValues = {
   manage_stock: boolean;
   stock_quantity: number;
   low_stock_threshold: number;
+  weight_grams: number;
   has_variants: boolean;
   is_free_delivery: boolean;
   is_featured: boolean;
@@ -154,6 +155,7 @@ function toProductRow(values: ProductFormValues, slug: string) {
     manage_stock: values.manage_stock,
     stock_quantity: computeStock(values),
     low_stock_threshold: Number(values.low_stock_threshold) || 5,
+    weight_grams: Number(values.weight_grams) || 500,
     has_variants: values.has_variants,
     is_free_delivery: values.is_free_delivery,
     is_featured: values.is_featured,

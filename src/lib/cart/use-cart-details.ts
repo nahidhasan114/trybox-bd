@@ -15,6 +15,8 @@ export type EnrichedCartLine = CartLine & {
   onSale: boolean;
   stock: number;
   manageStock: boolean;
+  weightGrams: number;
+  isFreeDelivery: boolean;
 };
 
 type ProductData = {
@@ -27,6 +29,8 @@ type ProductData = {
   sale_ends_at: string | null;
   stock_quantity: number;
   manage_stock: boolean;
+  weight_grams: number;
+  is_free_delivery: boolean;
   product_images: { image_url: string; is_main: boolean }[] | null;
   product_variants:
     | { id: string; variant_name: string; regular_price: number | null; sale_price: number | null; stock_quantity: number }[]
@@ -54,7 +58,7 @@ export function useCartDetails(lines: CartLine[]) {
     supabase
       .from("products")
       .select(
-        "id, name_bn, slug, regular_price, sale_price, sale_starts_at, sale_ends_at, stock_quantity, manage_stock, product_images(image_url, is_main), product_variants(id, variant_name, regular_price, sale_price, stock_quantity)",
+        "id, name_bn, slug, regular_price, sale_price, sale_starts_at, sale_ends_at, stock_quantity, manage_stock, weight_grams, is_free_delivery, product_images(image_url, is_main), product_variants(id, variant_name, regular_price, sale_price, stock_quantity)",
       )
       .in("id", ids)
       .then(({ data }) => {
@@ -109,6 +113,8 @@ export function useCartDetails(lines: CartLine[]) {
         onSale,
         stock: variant ? variant.stock_quantity : product.stock_quantity,
         manageStock: product.manage_stock,
+        weightGrams: product.weight_grams ?? 500,
+        isFreeDelivery: product.is_free_delivery,
       });
     }
     return result;
