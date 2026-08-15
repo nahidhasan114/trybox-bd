@@ -33,6 +33,7 @@ export async function Footer() {
               <li><Link href="/shop?offer=1" className="transition-colors hover:text-primary-700">Offers</Link></li>
               <li><Link href="/shop?new=1" className="transition-colors hover:text-primary-700">New Arrivals</Link></li>
               <li><Link href="/shop?best=1" className="transition-colors hover:text-primary-700">Best Sellers</Link></li>
+              <li><Link href="/about" className="transition-colors hover:text-primary-700">About Us</Link></li>
             </ul>
           </div>
 

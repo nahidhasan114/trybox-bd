@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "sonner";
 import { Input, FieldLabel } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ImageUploader } from "@/components/admin/image-uploader";
 import type { SiteSettings } from "@/lib/site-settings";
@@ -46,6 +47,7 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
       free_delivery_min_order: settings.free_delivery_min_order,
       seo_default_title: settings.seo_default_title,
       seo_default_description: settings.seo_default_description,
+      cod_trust_message: settings.cod_trust_message,
     },
   });
 
@@ -139,6 +141,12 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
         <p className="sm:col-span-2 text-xs text-foreground/50">
           ঢাকা/ঢাকার বাইরে আলাদা চার্জের জন্য &quot;শিপিং রুলস&quot; পেজ ব্যবহার করুন।
         </p>
+      </Section>
+
+      <Section title="অর্ডার কনফার্মেশন মেসেজ" description="অর্ডার সফল হওয়ার পর কাস্টমার এই মেসেজটি দেখবে (COD অর্ডারে)">
+        <div className="sm:col-span-2">
+          <Textarea rows={3} {...register("cod_trust_message")} />
+        </div>
       </Section>
 
       <Section title="SEO ডিফল্ট">

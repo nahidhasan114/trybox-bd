@@ -21,6 +21,7 @@ export type SettingsFormValues = {
   free_delivery_min_order: number;
   seo_default_title: string;
   seo_default_description: string;
+  cod_trust_message: string;
 };
 
 export async function updateSiteSettings(values: SettingsFormValues) {
@@ -65,6 +66,7 @@ export async function updateSiteSettings(values: SettingsFormValues) {
       value: values.seo_default_description,
       updated_by: admin.id,
     },
+    { key: "cod_trust_message", value: values.cod_trust_message, updated_by: admin.id },
   ];
 
   const { error } = await supabase.from("site_settings").upsert(rows, { onConflict: "key" });

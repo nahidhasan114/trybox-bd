@@ -14,6 +14,7 @@ import {
   Settings,
   ShieldCheck,
   Truck,
+  Contact,
 } from "lucide-react";
 
 export type AdminNavItem = {
@@ -36,6 +37,7 @@ export const adminNavItems: AdminNavItem[] = [
   { label: "কাস্টমার", href: "/admin/customers", icon: Users },
   { label: "রিভিউ", href: "/admin/reviews", icon: Star },
   { label: "রিপোর্ট", href: "/admin/reports", icon: BarChart3 },
+  { label: "টিম / আমাদের সম্পর্কে", href: "/admin/team", icon: Contact },
   { label: "সেটিংস", href: "/admin/settings", icon: Settings },
   { label: "অ্যাডমিন ইউজার", href: "/admin/admins", icon: ShieldCheck, ownerOnly: true },
 ];

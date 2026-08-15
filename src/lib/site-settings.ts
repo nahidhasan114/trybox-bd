@@ -18,6 +18,7 @@ export type SiteSettings = {
   free_delivery_min_order: number;
   seo_default_title: string;
   seo_default_description: string;
+  cod_trust_message: string;
 };
 
 const FALLBACK: SiteSettings = {
@@ -37,6 +38,8 @@ const FALLBACK: SiteSettings = {
   free_delivery_min_order: 0,
   seo_default_title: "TryBox BD",
   seo_default_description: "",
+  cod_trust_message:
+    "আমরা আপনার উপর বিশ্বাস করে ক্যাশ অন ডেলিভারিতে প্রোডাক্টটি পাঠাচ্ছি। অনুগ্রহ করে ডেলিভারির সময় প্রোডাক্টটি রিসিভ করবেন। আপনার বিশ্বাসই আমাদের সবচেয়ে বড় শক্তি।",
 };
 
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
