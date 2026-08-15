@@ -1,0 +1,88 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { Tables } from "@/types/database.types";
+
+export function HeroBanner({ banners }: { banners: Tables<"banners">[] }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const timer = setInterval(() => setIndex((i) => (i + 1) % banners.length), 5000);
+    return () => clearInterval(timer);
+  }, [banners.length]);
+
+  if (banners.length === 0) return null;
+
+  const banner = banners[index];
+
+  const bannerContent = (
+    <>
+      <picture>
+        <source media="(max-width: 640px)" srcSet={banner.mobile_image_url ?? banner.desktop_image_url} />
+        <Image
+          src={banner.desktop_image_url}
+          alt={banner.title ?? ""}
+          fill
+          unoptimized
+          priority
+          className="object-cover"
+        />
+      </picture>
+      {(banner.title || banner.subtitle || banner.cta_text) && (
+        <div className="absolute inset-0 flex flex-col justify-center gap-2 bg-gradient-to-r from-black/50 via-black/10 to-transparent p-6 sm:p-10">
+          {banner.title && <h2 className="max-w-md text-xl font-semibold text-white sm:text-3xl">{banner.title}</h2>}
+          {banner.subtitle && <p className="max-w-sm text-sm text-white/90 sm:text-base">{banner.subtitle}</p>}
+          {banner.cta_text && (
+            <span className="mt-2 inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-sm font-medium text-foreground">
+              {banner.cta_text}
+            </span>
+          )}
+        </div>
+      )}
+    </>
+  );
+
+  return (
+    <section className="mx-auto max-w-7xl px-4 pt-4 sm:px-6">
+      <div className="relative overflow-hidden rounded-2xl bg-surface-muted">
+        {banner.cta_url ? (
+          <Link href={banner.cta_url} className="relative block aspect-[16/9] w-full sm:aspect-[21/8]">
+            {bannerContent}
+          </Link>
+        ) : (
+          <div className="relative block aspect-[16/9] w-full sm:aspect-[21/8]">{bannerContent}</div>
+        )}
+
+        {banners.length > 1 && (
+          <>
+            <button
+              onClick={() => setIndex((i) => (i - 1 + banners.length) % banners.length)}
+              className="absolute left-3 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-foreground hover:bg-white"
+            >
+              <ChevronLeft className="size-4" />
+            </button>
+            <button
+              onClick={() => setIndex((i) => (i + 1) % banners.length)}
+              className="absolute right-3 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-foreground hover:bg-white"
+            >
+              <ChevronRight className="size-4" />
+            </button>
+            <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+              {banners.map((b, i) => (
+                <button
+                  key={b.id}
+                  onClick={() => setIndex(i)}
+                  className={`h-1.5 rounded-full transition-all ${i === index ? "w-5 bg-white" : "w-1.5 bg-white/60"}`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </section>
+  );
+}

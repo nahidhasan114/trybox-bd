@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+:root {
+  --background: #faf8f5;
+  --foreground: #1f2937;
+
+  --color-primary-50: #eef3ff;
+  --color-primary-100: #dbe6fe;
+  --color-primary-200: #b9cefe;
+  --color-primary-300: #8bacfc;
+  --color-primary-400: #5c82f6;
+  --color-primary-500: #3a5eea;
+  --color-primary-600: #1e40af;
+  --color-primary-700: #1a3689;
+  --color-primary-800: #17296b;
+  --color-primary-900: #142257;
+
+  --color-accent-50: #fff4ed;
+  --color-accent-100: #ffe6d5;
+  --color-accent-200: #ffc9aa;
+  --color-accent-300: #ffa473;
+  --color-accent-400: #fd7f3f;
+  --color-accent-500: #f9601c;
+  --color-accent-600: #ea4712;
+  --color-accent-700: #c23411;
+  --color-accent-800: #9a2b16;
+  --color-accent-900: #7c2615;
+
+  --color-surface: #ffffff;
+  --color-surface-muted: #f5f2ed;
+  --color-border: #e7e2d9;
+
+  --radius-card: 0.875rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+
+  --color-primary-50: var(--color-primary-50);
+  --color-primary-100: var(--color-primary-100);
+  --color-primary-200: var(--color-primary-200);
+  --color-primary-300: var(--color-primary-300);
+  --color-primary-400: var(--color-primary-400);
+  --color-primary-500: var(--color-primary-500);
+  --color-primary-600: var(--color-primary-600);
+  --color-primary-700: var(--color-primary-700);
+  --color-primary-800: var(--color-primary-800);
+  --color-primary-900: var(--color-primary-900);
+
+  --color-accent-50: var(--color-accent-50);
+  --color-accent-100: var(--color-accent-100);
+  --color-accent-200: var(--color-accent-200);
+  --color-accent-300: var(--color-accent-300);
+  --color-accent-400: var(--color-accent-400);
+  --color-accent-500: var(--color-accent-500);
+  --color-accent-600: var(--color-accent-600);
+  --color-accent-700: var(--color-accent-700);
+  --color-accent-800: var(--color-accent-800);
+  --color-accent-900: var(--color-accent-900);
+
+  --color-surface: var(--color-surface);
+  --color-surface-muted: var(--color-surface-muted);
+  --color-border: var(--color-border);
+
+  --radius-card: var(--radius-card);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
