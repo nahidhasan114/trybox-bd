@@ -80,7 +80,9 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           {product.name_bn}
         </Link>
         <div className="flex items-baseline gap-1.5">
-          <span className="font-semibold text-foreground">{formatBDT(price)}</span>
+          <span className={onSale ? "font-semibold text-accent-600" : "font-semibold text-foreground"}>
+            {formatBDT(price)}
+          </span>
           {onSale && <span className="text-xs text-foreground/40 line-through">{formatBDT(originalPrice)}</span>}
         </div>
 
@@ -95,7 +97,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           <button
             onClick={handleAddToCart}
             disabled={outOfStock}
-            className="mt-auto flex h-9 items-center justify-center gap-1.5 rounded-full bg-primary-600 text-xs font-medium text-white transition-colors hover:bg-primary-700 disabled:bg-border disabled:text-foreground/40"
+            className="mt-auto flex h-9 items-center justify-center gap-1.5 rounded-full bg-gradient-to-b from-primary-500 to-primary-600 text-xs font-medium text-white shadow-sm transition-all hover:from-primary-600 hover:to-primary-700 hover:shadow-md disabled:from-border disabled:to-border disabled:text-foreground/40 disabled:shadow-none"
           >
             <ShoppingCart className="size-3.5" /> কার্টে যোগ করুন
           </button>

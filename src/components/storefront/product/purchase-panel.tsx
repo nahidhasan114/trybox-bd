@@ -151,14 +151,14 @@ export function PurchasePanel({
         <button
           onClick={handleAddToCart}
           disabled={outOfStock}
-          className="flex h-12 items-center justify-center gap-2 rounded-full border-2 border-primary-600 text-sm font-semibold text-primary-700 hover:bg-primary-50 disabled:border-border disabled:text-foreground/30"
+          className="flex h-12 items-center justify-center gap-2 rounded-full border-2 border-primary-600 text-sm font-semibold text-primary-700 transition-colors hover:bg-primary-50 disabled:border-border disabled:text-foreground/30"
         >
           <ShoppingCart className="size-4" /> কার্টে যোগ করুন
         </button>
         <button
           onClick={handleBuyNow}
           disabled={outOfStock}
-          className="flex h-12 items-center justify-center gap-2 rounded-full bg-accent-600 text-sm font-semibold text-white hover:bg-accent-700 disabled:bg-border disabled:text-foreground/30"
+          className="flex h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-accent-500 to-accent-600 text-sm font-semibold text-white shadow-sm transition-all hover:from-accent-600 hover:to-accent-700 hover:shadow-md disabled:from-border disabled:to-border disabled:text-foreground/30 disabled:shadow-none"
         >
           <Zap className="size-4" /> এখনই কিনুন
         </button>
