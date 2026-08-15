@@ -57,9 +57,17 @@ export default async function HomePage() {
       )}
       <TrustBenefits />
       <CategoryGrid categories={categories} />
-      <ProductSection title="নতুন পণ্য" viewAllHref="/shop?new=1" products={sections.newArrivals} />
+      <ProductSection title="সব প্রোডাক্ট" viewAllHref="/shop" products={sections.allProducts} />
+      <ProductSection title="বেস্ট সেলার" viewAllHref="/shop?best=1" products={sections.bestSellers} tint />
+      {sections.hotDealBadgeId && (
+        <ProductSection
+          title="হট ডিল"
+          viewAllHref={`/shop?badge=${sections.hotDealBadgeId}`}
+          products={sections.hotDeals}
+        />
+      )}
       <ProductSection title="স্পেশাল কম্বো অফার" viewAllHref="/shop?type=combo" products={sections.comboOffers} tint />
-      <ProductSection title="বেস্ট সেলার" viewAllHref="/shop?best=1" products={sections.bestSellers} />
+      <ProductSection title="নতুন পণ্য" viewAllHref="/shop?new=1" products={sections.newArrivals} />
       <ProductSection title="ফিচার্ড প্রোডাক্ট" viewAllHref="/shop?featured=1" products={sections.featured} tint />
       <ProductSection title="ফ্রি ডেলিভারি প্রোডাক্ট" viewAllHref="/shop?free_delivery=1" products={sections.freeDelivery} />
     </>

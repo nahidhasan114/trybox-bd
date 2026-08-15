@@ -46,15 +46,20 @@ function toCardData(p: RawProduct): ProductCardData {
   };
 }
 
+const HOT_DEAL_BADGE_NAME = "হট ডিল";
+
 export async function getHomepageSections() {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from("products")
-    .select(PRODUCT_SELECT)
-    .eq("status", "active")
-    .order("created_at", { ascending: false })
-    .limit(300);
+  const [{ data, error }, { data: hotDealBadge }] = await Promise.all([
+    supabase
+      .from("products")
+      .select(PRODUCT_SELECT)
+      .eq("status", "active")
+      .order("created_at", { ascending: false })
+      .limit(300),
+    supabase.from("product_badges").select("id").eq("name_bn", HOT_DEAL_BADGE_NAME).maybeSingle(),
+  ]);
 
   if (error) console.error("getHomepageSections failed:", error.message);
 
@@ -68,6 +73,12 @@ export async function getHomepageSections() {
       .map((x) => x.card);
 
   return {
+    allProducts: take(
+      () => true,
+      (a, b) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime(),
+    ),
+    hotDeals: take((p) => (p.product_badge_links ?? []).some((l) => l.product_badges?.name_bn === HOT_DEAL_BADGE_NAME)),
+    hotDealBadgeId: hotDealBadge?.id ?? null,
     featured: take((p) => !!p.is_featured),
     bestSellers: take((p) => !!p.is_best_seller, (a, b) => (b.sold_count ?? 0) - (a.sold_count ?? 0)),
     newArrivals: take((p) => !!p.is_new_arrival),

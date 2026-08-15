@@ -8,6 +8,7 @@ export type ListingFilters = {
   q?: string;
   sort?: string;
   type?: string;
+  badge?: string;
   best?: string;
   new?: string;
   featured?: string;
@@ -51,6 +52,13 @@ export async function getProductListing(filters: ListingFilters): Promise<{
   if (filters.q?.trim()) {
     const safe = filters.q.trim().replace(/[,()%*]/g, " ").trim();
     if (safe) query = query.or(`name_bn.ilike.%${safe}%,name_en.ilike.%${safe}%,sku.ilike.%${safe}%`);
+  }
+
+  if (filters.badge) {
+    const { data: links } = await supabase.from("product_badge_links").select("product_id").eq("badge_id", filters.badge);
+    const ids = (links ?? []).map((l) => l.product_id);
+    if (ids.length === 0) return { products: [], total: 0, page, pageSize: PAGE_SIZE };
+    query = query.in("id", ids);
   }
 
   if (filters.type) query = query.eq("product_type", filters.type);
