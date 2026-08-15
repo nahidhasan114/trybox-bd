@@ -14,9 +14,9 @@ export function TrustBenefits() {
         {benefits.map((b) => (
           <div
             key={b.text}
-            className="flex items-center gap-2.5 rounded-2xl border border-border bg-surface px-3 py-3 sm:px-4"
+            className="flex items-center gap-2.5 rounded-2xl border border-border bg-surface px-3 py-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary-200 hover:shadow-md sm:px-4"
           >
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary-600">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary-50 to-primary-100 text-primary-600">
               <b.icon className="size-4.5" />
             </span>
             <span className="text-xs font-medium text-foreground/80 sm:text-sm">{b.text}</span>

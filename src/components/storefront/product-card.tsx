@@ -34,7 +34,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
   };
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-shadow hover:shadow-lg">
+    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-primary-200 hover:shadow-xl">
       <Link href={`/products/${product.slug}`} className="relative block aspect-square overflow-hidden bg-surface-muted">
         {product.image ? (
           <Image
@@ -76,7 +76,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
       </Link>
 
       <div className="flex flex-1 flex-col gap-1.5 p-3">
-        <Link href={`/products/${product.slug}`} className="line-clamp-2 text-sm font-medium text-foreground hover:text-primary-700">
+        <Link href={`/products/${product.slug}`} className="line-clamp-2 text-sm font-medium text-foreground transition-colors hover:text-primary-700">
           {product.name_bn}
         </Link>
         <div className="flex items-baseline gap-1.5">
@@ -87,7 +87,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
         {product.has_variants ? (
           <Link
             href={`/products/${product.slug}`}
-            className="mt-auto flex h-9 items-center justify-center gap-1.5 rounded-full bg-primary-50 text-xs font-medium text-primary-700 hover:bg-primary-100"
+            className="mt-auto flex h-9 items-center justify-center gap-1.5 rounded-full bg-primary-50 text-xs font-medium text-primary-700 transition-colors hover:bg-primary-100"
           >
             অপশন দেখুন
           </Link>
@@ -95,7 +95,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           <button
             onClick={handleAddToCart}
             disabled={outOfStock}
-            className="mt-auto flex h-9 items-center justify-center gap-1.5 rounded-full bg-primary-600 text-xs font-medium text-white hover:bg-primary-700 disabled:bg-border disabled:text-foreground/40"
+            className="mt-auto flex h-9 items-center justify-center gap-1.5 rounded-full bg-primary-600 text-xs font-medium text-white transition-colors hover:bg-primary-700 disabled:bg-border disabled:text-foreground/40"
           >
             <ShoppingCart className="size-3.5" /> কার্টে যোগ করুন
           </button>

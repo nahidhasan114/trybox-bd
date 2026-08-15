@@ -14,16 +14,18 @@ export function CategoryGrid({ categories }: { categories: Tables<"categories">[
           <Link
             key={c.id}
             href={`/categories/${c.slug}`}
-            className="group flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface p-3 text-center transition-shadow hover:shadow-md"
+            className="group flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface p-3 text-center transition-all duration-300 hover:-translate-y-1 hover:border-primary-200 hover:shadow-lg"
           >
-            <div className="relative flex size-14 items-center justify-center overflow-hidden rounded-full bg-primary-50 sm:size-16">
+            <div className="relative flex size-14 items-center justify-center overflow-hidden rounded-full bg-primary-50 transition-transform duration-300 group-hover:scale-105 sm:size-16">
               {c.image_url ? (
                 <Image src={c.image_url} alt={c.name_bn} fill className="object-cover" unoptimized />
               ) : (
                 <PackageOpen className="size-6 text-primary-500" />
               )}
             </div>
-            <span className="line-clamp-2 text-xs font-medium text-foreground/80 sm:text-sm">{c.name_bn}</span>
+            <span className="line-clamp-2 text-xs font-medium text-foreground/80 transition-colors group-hover:text-primary-700 sm:text-sm">
+              {c.name_bn}
+            </span>
           </Link>
         ))}
       </div>

@@ -50,7 +50,7 @@ export function NavSearch({ className }: { className?: string }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => suggestions.length > 0 && setOpen(true)}
-          placeholder="প্রোডাক্ট, ব্র্যান্ড খুঁজুন..."
+          placeholder="Search products, brands..."
           className="ml-2 w-full bg-transparent text-sm outline-none placeholder:text-foreground/40"
         />
       </div>

@@ -20,8 +20,8 @@ export function MobileDrawer({ categories }: { categories: NavCategory[] }) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex size-10 items-center justify-center rounded-full hover:bg-surface-muted lg:hidden"
-        aria-label="মেনু"
+        className="flex size-10 items-center justify-center rounded-full transition-colors hover:bg-surface-muted lg:hidden"
+        aria-label="Menu"
       >
         <Menu className="size-5 text-foreground/70" />
       </button>
@@ -31,7 +31,7 @@ export function MobileDrawer({ categories }: { categories: NavCategory[] }) {
           <div className="absolute inset-0 bg-black/40" onClick={() => setOpen(false)} />
           <div className="relative flex h-full w-full max-w-xs flex-col overflow-y-auto bg-surface shadow-xl">
             <div className="flex items-center justify-between border-b border-border p-4">
-              <span className="font-medium text-foreground">মেনু</span>
+              <span className="font-medium text-foreground">Menu</span>
               <button onClick={() => setOpen(false)} className="rounded-full p-1.5 hover:bg-surface-muted">
                 <X className="size-5" />
               </button>
@@ -39,18 +39,18 @@ export function MobileDrawer({ categories }: { categories: NavCategory[] }) {
 
             <nav className="flex flex-col p-2">
               {[
-                { label: "হোম", href: "/" },
-                { label: "শপ", href: "/shop" },
-                { label: "কম্বো অফার", href: "/shop?type=combo" },
-                { label: "নতুন পণ্য", href: "/shop?new=1" },
-                { label: "বেস্ট সেলার", href: "/shop?best=1" },
-                { label: "অফার", href: "/shop?offer=1" },
+                { label: "Home", href: "/" },
+                { label: "Shop", href: "/shop" },
+                { label: "Combo Offers", href: "/shop?type=combo" },
+                { label: "New Arrivals", href: "/shop?new=1" },
+                { label: "Best Sellers", href: "/shop?best=1" },
+                { label: "Offers", href: "/shop?offer=1" },
               ].map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="rounded-xl px-3 py-2.5 text-sm font-medium text-foreground hover:bg-surface-muted"
+                  className="rounded-xl px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-surface-muted"
                 >
                   {item.label}
                 </Link>
@@ -58,7 +58,7 @@ export function MobileDrawer({ categories }: { categories: NavCategory[] }) {
             </nav>
 
             <div className="border-t border-border p-2">
-              <p className="px-3 py-2 text-xs font-medium text-foreground/40">ক্যাটাগরি</p>
+              <p className="px-3 py-2 text-xs font-medium text-foreground/40">Categories</p>
               {categories.map((c) => (
                 <Link
                   key={c.slug}
@@ -78,14 +78,14 @@ export function MobileDrawer({ categories }: { categories: NavCategory[] }) {
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-foreground/80 hover:bg-surface-muted"
               >
-                <Truck className="size-4" /> অর্ডার ট্র্যাক করুন
+                <Truck className="size-4" /> Track Order
               </Link>
               <Link
                 href="/contact"
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-foreground/80 hover:bg-surface-muted"
               >
-                <Phone className="size-4" /> যোগাযোগ
+                <Phone className="size-4" /> Contact
               </Link>
             </div>
           </div>

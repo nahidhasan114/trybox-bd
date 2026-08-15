@@ -9,8 +9,8 @@ export function CartButton() {
   return (
     <button
       onClick={openDrawer}
-      className="relative flex size-10 items-center justify-center rounded-full hover:bg-surface-muted"
-      aria-label="কার্ট"
+      className="relative flex size-10 items-center justify-center rounded-full transition-colors hover:bg-surface-muted"
+      aria-label="Cart"
     >
       <ShoppingCart className="size-5 text-foreground/70" />
       {itemCount > 0 && (

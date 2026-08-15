@@ -21,9 +21,9 @@ export function MegaMenu({ categories }: { categories: NavCategory[] }) {
     <div ref={rootRef} className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1 text-sm font-medium text-foreground/80 hover:text-primary-700"
+        className="flex items-center gap-1 text-sm font-medium text-foreground/80 transition-colors hover:text-primary-700"
       >
-        ক্যাটাগরি <ChevronDown className="size-3.5" />
+        Categories <ChevronDown className="size-3.5" />
       </button>
 
       {open && (

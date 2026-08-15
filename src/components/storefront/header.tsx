@@ -9,11 +9,11 @@ import { NavSearch } from "./nav-search";
 import { CartButton } from "./cart-button";
 
 const navLinks = [
-  { label: "হোম", href: "/" },
-  { label: "শপ", href: "/shop" },
-  { label: "কম্বো অফার", href: "/shop?type=combo" },
-  { label: "নতুন পণ্য", href: "/shop?new=1" },
-  { label: "বেস্ট সেলার", href: "/shop?best=1" },
+  { label: "Home", href: "/" },
+  { label: "Shop", href: "/shop" },
+  { label: "Combo Offers", href: "/shop?type=combo" },
+  { label: "New Arrivals", href: "/shop?new=1" },
+  { label: "Best Sellers", href: "/shop?best=1" },
 ];
 
 export async function Header() {
@@ -46,7 +46,11 @@ export async function Header() {
 
         <nav className="hidden items-center gap-5 lg:flex">
           {navLinks.map((l) => (
-            <Link key={l.href} href={l.href} className="text-sm font-medium text-foreground/80 hover:text-primary-700">
+            <Link
+              key={l.href}
+              href={l.href}
+              className="text-sm font-medium text-foreground/80 transition-colors hover:text-primary-700"
+            >
               {l.label}
             </Link>
           ))}
@@ -58,7 +62,11 @@ export async function Header() {
         </div>
 
         <div className="ml-auto flex items-center gap-1">
-          <Link href="/track-order" className="hidden size-10 items-center justify-center rounded-full hover:bg-surface-muted sm:flex" aria-label="অ্যাকাউন্ট">
+          <Link
+            href="/track-order"
+            className="hidden size-10 items-center justify-center rounded-full transition-colors hover:bg-surface-muted sm:flex"
+            aria-label="Account"
+          >
             <User className="size-5 text-foreground/70" />
           </Link>
           <CartButton />
