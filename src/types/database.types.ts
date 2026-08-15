@@ -1310,6 +1310,27 @@ export type Database = {
           },
         ]
       }
+      admin_invites: {
+        Row: {
+          email: string
+          role: string
+          invited_by: string | null
+          created_at: string
+        }
+        Insert: {
+          email: string
+          role: string
+          invited_by?: string | null
+          created_at?: string
+        }
+        Update: {
+          email?: string
+          role?: string
+          invited_by?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -1317,6 +1338,10 @@ export type Database = {
     Functions: {
       is_owner: { Args: never; Returns: boolean }
       is_staff: { Args: never; Returns: boolean }
+      list_admin_users: {
+        Args: Record<PropertyKey, never>
+        Returns: { user_id: string; email: string; role: string; created_at: string }[]
+      }
       track_order: {
         Args: { p_order_number: string; p_phone: string }
         Returns: Json
