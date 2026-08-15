@@ -27,6 +27,10 @@ export function PurchasePanel({
   stockQuantity,
   manageStock,
   variants,
+  isCustomizable = false,
+  customizationOptions = [],
+  customizationPickCount = 0,
+  customizationInstructions = null,
 }: {
   productId: string;
   regularPrice: number;
@@ -36,6 +40,10 @@ export function PurchasePanel({
   stockQuantity: number;
   manageStock: boolean;
   variants: VariantOption[];
+  isCustomizable?: boolean;
+  customizationOptions?: string[];
+  customizationPickCount?: number;
+  customizationInstructions?: string | null;
 }) {
   const router = useRouter();
   const { addItem, openDrawer } = useCart();
@@ -43,6 +51,19 @@ export function PurchasePanel({
   const defaultVariant = variants.find((v) => v.is_default) ?? variants[0];
   const [variantId, setVariantId] = useState<string | null>(defaultVariant?.id ?? null);
   const [quantity, setQuantity] = useState(1);
+
+  const showCustomization = isCustomizable && customizationOptions.length > 0;
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const pickCount = customizationPickCount > 0 ? customizationPickCount : null;
+  const customizationValid = !showCustomization || !pickCount || selectedOptions.length === pickCount;
+
+  const toggleOption = (option: string) => {
+    setSelectedOptions((prev) => {
+      if (prev.includes(option)) return prev.filter((o) => o !== option);
+      if (pickCount && prev.length >= pickCount) return prev;
+      return [...prev, option];
+    });
+  };
 
   const selectedVariant = variants.find((v) => v.id === variantId) ?? null;
 
@@ -66,7 +87,11 @@ export function PurchasePanel({
       toast.error("অনুগ্রহ করে একটি অপশন নির্বাচন করুন");
       return;
     }
-    addItem(productId, variantId, quantity);
+    if (!customizationValid) {
+      toast.error(`অনুগ্রহ করে ঠিক ${pickCount}টি অপশন বেছে নিন`);
+      return;
+    }
+    addItem(productId, variantId, quantity, showCustomization && selectedOptions.length > 0 ? selectedOptions : null);
     toast.success("কার্টে যোগ করা হয়েছে");
     openDrawer();
   };
@@ -76,7 +101,16 @@ export function PurchasePanel({
       toast.error("অনুগ্রহ করে একটি অপশন নির্বাচন করুন");
       return;
     }
-    setBuyNowItem({ productId, variantId, quantity });
+    if (!customizationValid) {
+      toast.error(`অনুগ্রহ করে ঠিক ${pickCount}টি অপশন বেছে নিন`);
+      return;
+    }
+    setBuyNowItem({
+      productId,
+      variantId,
+      quantity,
+      customization: showCustomization && selectedOptions.length > 0 ? selectedOptions : null,
+    });
     router.push("/checkout?mode=buynow");
   };
 
@@ -121,6 +155,40 @@ export function PurchasePanel({
         </div>
       )}
 
+      {showCustomization && (
+        <div className="rounded-2xl border border-primary-200 bg-primary-50/40 p-4">
+          <p className="text-sm font-medium text-foreground">
+            নিজের পছন্দমতো সাজান {pickCount && <span className="text-primary-700">({selectedOptions.length}/{pickCount} নির্বাচিত)</span>}
+          </p>
+          {customizationInstructions && (
+            <p className="mt-1 text-xs text-foreground/50">{customizationInstructions}</p>
+          )}
+          <div className="mt-3 flex flex-wrap gap-2">
+            {customizationOptions.map((option) => {
+              const active = selectedOptions.includes(option);
+              const disabled = !active && pickCount !== null && selectedOptions.length >= pickCount;
+              return (
+                <button
+                  key={option}
+                  type="button"
+                  disabled={disabled}
+                  onClick={() => toggleOption(option)}
+                  className={cn(
+                    "rounded-full border px-4 py-2 text-sm font-medium transition-colors",
+                    active
+                      ? "border-primary-600 bg-primary-600 text-white"
+                      : "border-border bg-surface text-foreground/70 hover:border-primary-300",
+                    disabled && "cursor-not-allowed opacity-40",
+                  )}
+                >
+                  {option}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div>
         <p className="mb-2 text-sm font-medium text-foreground">পরিমাণ</p>
         <div className="flex items-center gap-3">
@@ -150,14 +218,14 @@ export function PurchasePanel({
       <div className="grid grid-cols-2 gap-3">
         <button
           onClick={handleAddToCart}
-          disabled={outOfStock}
+          disabled={outOfStock || !customizationValid}
           className="flex h-12 items-center justify-center gap-2 rounded-full border-2 border-primary-600 text-sm font-semibold text-primary-700 transition-colors hover:bg-primary-50 disabled:border-border disabled:text-foreground/30"
         >
           <ShoppingCart className="size-4" /> কার্টে যোগ করুন
         </button>
         <button
           onClick={handleBuyNow}
-          disabled={outOfStock}
+          disabled={outOfStock || !customizationValid}
           className="flex h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-accent-500 to-accent-600 text-sm font-semibold text-white shadow-sm transition-all hover:from-accent-600 hover:to-accent-700 hover:shadow-md disabled:from-border disabled:to-border disabled:text-foreground/30 disabled:shadow-none"
         >
           <Zap className="size-4" /> এখনই কিনুন

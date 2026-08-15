@@ -56,10 +56,7 @@ export function BrandForm({ brand }: { brand?: Tables<"brands"> }) {
             <FieldLabel>ব্র্যান্ডের নাম</FieldLabel>
             <Input {...register("name", { required: true })} />
           </div>
-          <div>
-            <FieldLabel>Slug (খালি রাখলে auto)</FieldLabel>
-            <Input {...register("slug")} />
-          </div>
+          <input type="hidden" {...register("slug")} />
           <div>
             <FieldLabel>ক্রম (Display Order)</FieldLabel>
             <Input type="number" {...register("display_order")} />

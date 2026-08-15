@@ -47,6 +47,10 @@ export type ProductFormValues = {
   is_featured: boolean;
   is_best_seller: boolean;
   is_new_arrival: boolean;
+  is_customizable: boolean;
+  customization_options_text: string;
+  customization_pick_count: number;
+  customization_instructions: string;
   sale_starts_at: string;
   sale_ends_at: string;
   short_description_bn: string;
@@ -161,6 +165,13 @@ function toProductRow(values: ProductFormValues, slug: string) {
     is_featured: values.is_featured,
     is_best_seller: values.is_best_seller,
     is_new_arrival: values.is_new_arrival,
+    is_customizable: values.is_customizable,
+    customization_options: values.customization_options_text
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean),
+    customization_pick_count: Number(values.customization_pick_count) || 0,
+    customization_instructions: values.customization_instructions || null,
     sale_starts_at: toDateOrNull(values.sale_starts_at),
     sale_ends_at: toDateOrNull(values.sale_ends_at),
     short_description_bn: values.short_description_bn || null,

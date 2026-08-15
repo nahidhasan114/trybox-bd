@@ -52,7 +52,10 @@ export function MiniCart() {
           ) : (
             <ul className="space-y-4">
               {items.map((item) => (
-                <li key={`${item.productId}-${item.variantId}`} className="flex gap-3">
+                <li
+                  key={`${item.productId}-${item.variantId}-${(item.customization ?? []).join("|")}`}
+                  className="flex gap-3"
+                >
                   <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-surface-muted">
                     {item.image ? (
                       <Image src={item.image} alt={item.name} fill className="object-cover" unoptimized />
@@ -65,23 +68,26 @@ export function MiniCart() {
                   <div className="flex flex-1 flex-col">
                     <p className="line-clamp-1 text-sm font-medium text-foreground">{item.name}</p>
                     {item.variantName && <p className="text-xs text-foreground/50">{item.variantName}</p>}
+                    {item.customization && item.customization.length > 0 && (
+                      <p className="text-xs text-primary-700">{item.customization.join(", ")}</p>
+                    )}
                     <p className="text-sm font-semibold text-foreground">{formatBDT(item.price)}</p>
                     <div className="mt-1 flex items-center gap-2">
                       <button
-                        onClick={() => updateQuantity(item.productId, item.variantId, item.quantity - 1)}
+                        onClick={() => updateQuantity(item.productId, item.variantId, item.quantity - 1, item.customization)}
                         className="flex size-6 items-center justify-center rounded-full border border-border hover:bg-surface-muted"
                       >
                         <Minus className="size-3" />
                       </button>
                       <span className="w-5 text-center text-sm">{item.quantity}</span>
                       <button
-                        onClick={() => updateQuantity(item.productId, item.variantId, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.productId, item.variantId, item.quantity + 1, item.customization)}
                         className="flex size-6 items-center justify-center rounded-full border border-border hover:bg-surface-muted"
                       >
                         <Plus className="size-3" />
                       </button>
                       <button
-                        onClick={() => removeItem(item.productId, item.variantId)}
+                        onClick={() => removeItem(item.productId, item.variantId, item.customization)}
                         className="ml-auto text-xs text-red-500 hover:underline"
                       >
                         মুছুন

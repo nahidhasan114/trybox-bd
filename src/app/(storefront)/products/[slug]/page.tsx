@@ -163,6 +163,10 @@ export default async function ProductDetailPage({
               stockQuantity={product.stock_quantity}
               manageStock={product.manage_stock}
               variants={activeVariants}
+              isCustomizable={product.is_customizable}
+              customizationOptions={(product.customization_options as string[] | null) ?? []}
+              customizationPickCount={product.customization_pick_count}
+              customizationInstructions={product.customization_instructions}
             />
           </div>
         </div>

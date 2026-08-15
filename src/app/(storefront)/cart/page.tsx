@@ -39,7 +39,10 @@ export default function CartPage() {
           {items.map((item) => {
             const overStock = item.manageStock && item.quantity > item.stock;
             return (
-              <div key={`${item.productId}-${item.variantId}`} className="flex gap-3 rounded-2xl border border-border bg-surface p-3">
+              <div
+                key={`${item.productId}-${item.variantId}-${(item.customization ?? []).join("|")}`}
+                className="flex gap-3 rounded-2xl border border-border bg-surface p-3"
+              >
                 <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-surface-muted">
                   {item.image ? (
                     <Image src={item.image} alt={item.name} fill className="object-cover" unoptimized />
@@ -54,6 +57,9 @@ export default function CartPage() {
                     {item.name}
                   </Link>
                   {item.variantName && <p className="text-xs text-foreground/50">{item.variantName}</p>}
+                  {item.customization && item.customization.length > 0 && (
+                    <p className="text-xs text-primary-700">{item.customization.join(", ")}</p>
+                  )}
                   <p className="mt-0.5 text-sm font-semibold text-foreground">{formatBDT(item.price)}</p>
                   {overStock && (
                     <p className="mt-1 text-xs text-red-600">মাত্র {item.stock}টি স্টকে আছে</p>
@@ -61,21 +67,21 @@ export default function CartPage() {
                   <div className="mt-2 flex items-center gap-3">
                     <div className="flex items-center rounded-full border border-border">
                       <button
-                        onClick={() => updateQuantity(item.productId, item.variantId, item.quantity - 1)}
+                        onClick={() => updateQuantity(item.productId, item.variantId, item.quantity - 1, item.customization)}
                         className="flex size-8 items-center justify-center hover:bg-surface-muted"
                       >
                         <Minus className="size-3.5" />
                       </button>
                       <span className="w-7 text-center text-sm">{item.quantity}</span>
                       <button
-                        onClick={() => updateQuantity(item.productId, item.variantId, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.productId, item.variantId, item.quantity + 1, item.customization)}
                         className="flex size-8 items-center justify-center hover:bg-surface-muted"
                       >
                         <Plus className="size-3.5" />
                       </button>
                     </div>
                     <button
-                      onClick={() => removeItem(item.productId, item.variantId)}
+                      onClick={() => removeItem(item.productId, item.variantId, item.customization)}
                       className="flex items-center gap-1 text-xs text-red-500 hover:underline"
                     >
                       <Trash2 className="size-3.5" /> মুছুন

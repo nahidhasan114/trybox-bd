@@ -65,10 +65,7 @@ export function CategoryForm({
             <FieldLabel>Name (English)</FieldLabel>
             <Input {...register("name_en")} />
           </div>
-          <div>
-            <FieldLabel>Slug (খালি রাখলে auto)</FieldLabel>
-            <Input placeholder="diapers" {...register("slug")} />
-          </div>
+          <input type="hidden" {...register("slug")} />
           <div>
             <FieldLabel>প্যারেন্ট ক্যাটাগরি (ঐচ্ছিক)</FieldLabel>
             <Controller

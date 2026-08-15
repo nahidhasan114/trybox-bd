@@ -38,7 +38,6 @@ export default async function AdminCategoriesPage() {
               <tr>
                 <th className="px-4 py-3 font-medium">ছবি</th>
                 <th className="px-4 py-3 font-medium">নাম</th>
-                <th className="px-4 py-3 font-medium">Slug</th>
                 <th className="px-4 py-3 font-medium">ক্রম</th>
                 <th className="px-4 py-3 font-medium">স্ট্যাটাস</th>
                 <th className="px-4 py-3 font-medium text-right">অ্যাকশন</th>
@@ -58,7 +57,6 @@ export default async function AdminCategoriesPage() {
                     <p className="font-medium text-foreground">{cat.name_bn}</p>
                     <p className="text-xs text-foreground/50">{cat.name_en}</p>
                   </td>
-                  <td className="px-4 py-3 text-foreground/60">{cat.slug}</td>
                   <td className="px-4 py-3 text-foreground/60">{cat.display_order}</td>
                   <td className="px-4 py-3">
                     <span

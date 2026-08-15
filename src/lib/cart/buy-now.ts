@@ -2,7 +2,7 @@
 
 const KEY = "trybox_buy_now";
 
-export type BuyNowItem = { productId: string; variantId: string | null; quantity: number };
+export type BuyNowItem = { productId: string; variantId: string | null; quantity: number; customization: string[] | null };
 
 export function setBuyNowItem(item: BuyNowItem) {
   window.sessionStorage.setItem(KEY, JSON.stringify(item));

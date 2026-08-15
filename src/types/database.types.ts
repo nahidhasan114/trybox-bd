@@ -522,6 +522,7 @@ export type Database = {
       order_items: {
         Row: {
           created_at: string
+          customization_note: string | null
           discount_amount: number
           id: string
           line_total: number
@@ -536,6 +537,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          customization_note?: string | null
           discount_amount?: number
           id?: string
           line_total: number
@@ -550,6 +552,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          customization_note?: string | null
           discount_amount?: number
           id?: string
           line_total?: number
@@ -974,6 +977,7 @@ export type Database = {
           has_variants: boolean
           id: string
           is_best_seller: boolean
+          is_customizable: boolean
           is_featured: boolean
           is_free_delivery: boolean
           is_new_arrival: boolean
@@ -982,6 +986,9 @@ export type Database = {
           name_bn: string
           name_en: string | null
           product_type: string
+          customization_instructions: string | null
+          customization_options: Json
+          customization_pick_count: number
           regular_price: number
           sale_ends_at: string | null
           sale_price: number | null
@@ -1012,6 +1019,7 @@ export type Database = {
           has_variants?: boolean
           id?: string
           is_best_seller?: boolean
+          is_customizable?: boolean
           is_featured?: boolean
           is_free_delivery?: boolean
           is_new_arrival?: boolean
@@ -1020,6 +1028,9 @@ export type Database = {
           name_bn: string
           name_en?: string | null
           product_type?: string
+          customization_instructions?: string | null
+          customization_options?: Json
+          customization_pick_count?: number
           regular_price?: number
           sale_ends_at?: string | null
           sale_price?: number | null
@@ -1050,6 +1061,7 @@ export type Database = {
           has_variants?: boolean
           id?: string
           is_best_seller?: boolean
+          is_customizable?: boolean
           is_featured?: boolean
           is_free_delivery?: boolean
           is_new_arrival?: boolean
@@ -1058,6 +1070,9 @@ export type Database = {
           name_bn?: string
           name_en?: string | null
           product_type?: string
+          customization_instructions?: string | null
+          customization_options?: Json
+          customization_pick_count?: number
           regular_price?: number
           sale_ends_at?: string | null
           sale_price?: number | null

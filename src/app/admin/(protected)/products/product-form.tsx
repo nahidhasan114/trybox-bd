@@ -36,6 +36,10 @@ type ProductWithChildren = {
   is_featured: boolean;
   is_best_seller: boolean;
   is_new_arrival: boolean;
+  is_customizable: boolean;
+  customization_options: unknown;
+  customization_pick_count: number;
+  customization_instructions: string | null;
   sale_starts_at: string | null;
   sale_ends_at: string | null;
   short_description_bn: string | null;
@@ -116,6 +120,12 @@ export function ProductForm({
       is_featured: product?.is_featured ?? false,
       is_best_seller: product?.is_best_seller ?? false,
       is_new_arrival: product?.is_new_arrival ?? true,
+      is_customizable: product?.is_customizable ?? false,
+      customization_options_text: Array.isArray(product?.customization_options)
+        ? (product.customization_options as string[]).join("\n")
+        : "",
+      customization_pick_count: product?.customization_pick_count ?? 1,
+      customization_instructions: product?.customization_instructions ?? "",
       sale_starts_at: toDateTimeLocal(product?.sale_starts_at ?? null),
       sale_ends_at: toDateTimeLocal(product?.sale_ends_at ?? null),
       short_description_bn: product?.short_description_bn ?? "",
@@ -151,6 +161,7 @@ export function ProductForm({
   const hasVariants = watch("has_variants");
   const manageStock = watch("manage_stock");
   const selectedBadges = watch("badge_ids");
+  const isCustomizable = watch("is_customizable");
 
   const variantArray = useFieldArray({ control, name: "variants" });
   const imageArray = useFieldArray({ control, name: "images" });
@@ -191,10 +202,7 @@ export function ProductForm({
             <FieldLabel>Product Name (English)</FieldLabel>
             <Input {...register("name_en")} />
           </div>
-          <div>
-            <FieldLabel>Slug (খালি রাখলে auto)</FieldLabel>
-            <Input {...register("slug")} />
-          </div>
+          <input type="hidden" {...register("slug")} />
           <div>
             <FieldLabel>SKU (ঐচ্ছিক)</FieldLabel>
             <Input {...register("sku")} />
@@ -325,6 +333,45 @@ export function ProductForm({
             <p className="mt-1 text-xs text-foreground/40">ডেলিভারি চার্জ এই ওজনের উপর নির্ভর করে হিসাব হয়</p>
           </div>
         </div>
+      </Section>
+
+      <Section
+        title="কাস্টমাইজেশন / পার্সোনালাইজড কম্বো"
+        description="কাস্টমার নিজে পছন্দ করে কম্বো সাজাতে পারবেন কিনা"
+      >
+        <Controller
+          control={control}
+          name="is_customizable"
+          render={({ field }) => (
+            <Switch
+              checked={field.value}
+              onChange={field.onChange}
+              label="এই প্রোডাক্ট কাস্টমাইজ করা যাবে"
+              description="চালু করলে কাস্টমার প্রোডাক্ট পেজে নিজের পছন্দের অপশন বাছাই করতে পারবেন"
+            />
+          )}
+        />
+        {isCustomizable && (
+          <div className="space-y-4">
+            <div>
+              <FieldLabel>অপশনগুলো লিখুন (প্রতি লাইনে একটি)</FieldLabel>
+              <Textarea
+                rows={5}
+                placeholder={"যেমন:\nডায়াপার - S\nডায়াপার - M\nবেবি ওয়াইপস\nফিডার বোতল"}
+                {...register("customization_options_text")}
+              />
+            </div>
+            <div>
+              <FieldLabel>কাস্টমার ঠিক কতটি অপশন বাছাই করবে</FieldLabel>
+              <Input type="number" min={0} {...register("customization_pick_count", { valueAsNumber: true })} />
+              <p className="mt-1 text-xs text-foreground/40">০ দিলে সংখ্যার কোনো বাধ্যবাধকতা থাকবে না</p>
+            </div>
+            <div>
+              <FieldLabel>নির্দেশনা (ঐচ্ছিক, কাস্টমার দেখবে)</FieldLabel>
+              <Textarea rows={2} placeholder="যেমন: যেকোনো ৩টি আইটেম বেছে নিন" {...register("customization_instructions")} />
+            </div>
+          </div>
+        )}
       </Section>
 
       {hasVariants && (

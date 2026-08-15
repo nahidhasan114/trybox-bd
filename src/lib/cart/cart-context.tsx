@@ -6,6 +6,7 @@ export type CartLine = {
   productId: string;
   variantId: string | null;
   quantity: number;
+  customization: string[] | null;
 };
 
 const STORAGE_KEY = "trybox_cart_v1";
@@ -13,9 +14,9 @@ const STORAGE_KEY = "trybox_cart_v1";
 type CartContextValue = {
   lines: CartLine[];
   itemCount: number;
-  addItem: (productId: string, variantId: string | null, quantity?: number) => void;
-  updateQuantity: (productId: string, variantId: string | null, quantity: number) => void;
-  removeItem: (productId: string, variantId: string | null) => void;
+  addItem: (productId: string, variantId: string | null, quantity?: number, customization?: string[] | null) => void;
+  updateQuantity: (productId: string, variantId: string | null, quantity: number, customization?: string[] | null) => void;
+  removeItem: (productId: string, variantId: string | null, customization?: string[] | null) => void;
   clearCart: () => void;
   isDrawerOpen: boolean;
   openDrawer: () => void;
@@ -24,8 +25,16 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-function sameLine(a: CartLine, productId: string, variantId: string | null) {
-  return a.productId === productId && a.variantId === variantId;
+function customizationKey(c: string[] | null | undefined) {
+  return c && c.length > 0 ? JSON.stringify([...c].sort()) : "";
+}
+
+function sameLine(a: CartLine, productId: string, variantId: string | null, customization: string[] | null = null) {
+  return (
+    a.productId === productId &&
+    a.variantId === variantId &&
+    customizationKey(a.customization) === customizationKey(customization)
+  );
 }
 
 function readStorage(): CartLine[] {
@@ -55,28 +64,34 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
   }, [lines, hydrated]);
 
-  const addItem = useCallback((productId: string, variantId: string | null, quantity = 1) => {
-    setLines((prev) => {
-      const existing = prev.find((l) => sameLine(l, productId, variantId));
-      if (existing) {
-        return prev.map((l) =>
-          sameLine(l, productId, variantId) ? { ...l, quantity: l.quantity + quantity } : l,
-        );
-      }
-      return [...prev, { productId, variantId, quantity }];
-    });
-    setDrawerOpen(true);
-  }, []);
+  const addItem = useCallback(
+    (productId: string, variantId: string | null, quantity = 1, customization: string[] | null = null) => {
+      setLines((prev) => {
+        const existing = prev.find((l) => sameLine(l, productId, variantId, customization));
+        if (existing) {
+          return prev.map((l) =>
+            sameLine(l, productId, variantId, customization) ? { ...l, quantity: l.quantity + quantity } : l,
+          );
+        }
+        return [...prev, { productId, variantId, quantity, customization }];
+      });
+      setDrawerOpen(true);
+    },
+    [],
+  );
 
-  const updateQuantity = useCallback((productId: string, variantId: string | null, quantity: number) => {
-    setLines((prev) => {
-      if (quantity <= 0) return prev.filter((l) => !sameLine(l, productId, variantId));
-      return prev.map((l) => (sameLine(l, productId, variantId) ? { ...l, quantity } : l));
-    });
-  }, []);
+  const updateQuantity = useCallback(
+    (productId: string, variantId: string | null, quantity: number, customization: string[] | null = null) => {
+      setLines((prev) => {
+        if (quantity <= 0) return prev.filter((l) => !sameLine(l, productId, variantId, customization));
+        return prev.map((l) => (sameLine(l, productId, variantId, customization) ? { ...l, quantity } : l));
+      });
+    },
+    [],
+  );
 
-  const removeItem = useCallback((productId: string, variantId: string | null) => {
-    setLines((prev) => prev.filter((l) => !sameLine(l, productId, variantId)));
+  const removeItem = useCallback((productId: string, variantId: string | null, customization: string[] | null = null) => {
+    setLines((prev) => prev.filter((l) => !sameLine(l, productId, variantId, customization)));
   }, []);
 
   const clearCart = useCallback(() => setLines([]), []);

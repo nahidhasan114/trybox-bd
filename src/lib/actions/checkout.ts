@@ -2,7 +2,12 @@
 
 import { createClient } from "@/lib/supabase/server";
 
-export type CheckoutItem = { productId: string; variantId: string | null; quantity: number };
+export type CheckoutItem = {
+  productId: string;
+  variantId: string | null;
+  quantity: number;
+  customization: string[] | null;
+};
 
 export type CheckoutInput = {
   customerName: string;
@@ -45,6 +50,7 @@ export async function submitOrder(input: CheckoutInput): Promise<CheckoutResult>
       product_id: i.productId,
       variant_id: i.variantId,
       quantity: i.quantity,
+      customization: i.customization && i.customization.length > 0 ? i.customization : null,
     })),
     p_coupon_code: input.couponCode || null,
   });

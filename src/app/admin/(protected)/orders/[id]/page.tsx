@@ -77,6 +77,9 @@ export default async function AdminOrderDetailPage({
                   <div>
                     <p className="text-foreground">{item.product_name}</p>
                     {item.variant_name && <p className="text-xs text-foreground/50">{item.variant_name}</p>}
+                    {item.customization_note && (
+                      <p className="text-xs font-medium text-primary-700">কাস্টমাইজেশন: {item.customization_note}</p>
+                    )}
                     <p className="text-xs text-foreground/50">
                       {item.quantity} × {formatBDT(item.unit_price)}
                     </p>

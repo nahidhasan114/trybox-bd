@@ -47,7 +47,11 @@ export function CheckoutForm({ bkashNumber, nagadNumber }: { bkashNumber: string
   useEffect(() => {
     if (isBuyNow) {
       const item = getBuyNowItem();
-      setBuyNowLine(item ? [{ productId: item.productId, variantId: item.variantId, quantity: item.quantity }] : []);
+      setBuyNowLine(
+        item
+          ? [{ productId: item.productId, variantId: item.variantId, quantity: item.quantity, customization: item.customization ?? null }]
+          : [],
+      );
     }
   }, [isBuyNow]);
 
@@ -329,7 +333,10 @@ export function CheckoutForm({ bkashNumber, nagadNumber }: { bkashNumber: string
         <h2 className="font-medium text-foreground">অর্ডার সামারি</h2>
         <ul className="space-y-3">
           {items.map((item) => (
-            <li key={`${item.productId}-${item.variantId}`} className="flex gap-3">
+            <li
+              key={`${item.productId}-${item.variantId}-${(item.customization ?? []).join("|")}`}
+              className="flex gap-3"
+            >
               <div className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-surface-muted">
                 {item.image ? (
                   <Image src={item.image} alt={item.name} fill className="object-cover" unoptimized />
@@ -342,6 +349,9 @@ export function CheckoutForm({ bkashNumber, nagadNumber }: { bkashNumber: string
               <div className="flex flex-1 flex-col text-sm">
                 <span className="line-clamp-1 text-foreground">{item.name}</span>
                 {item.variantName && <span className="text-xs text-foreground/50">{item.variantName}</span>}
+                {item.customization && item.customization.length > 0 && (
+                  <span className="text-xs text-primary-700">{item.customization.join(", ")}</span>
+                )}
                 <span className="text-foreground/60">
                   {item.quantity} × {formatBDT(item.price)}
                 </span>
