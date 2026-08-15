@@ -7,6 +7,8 @@ import { getSiteSettings } from "@/lib/site-settings";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
+export const dynamic = "force-dynamic";
+
 const bodyFont = Hind_Siliguri({
   variable: "--font-body",
   subsets: ["latin", "bengali"],
