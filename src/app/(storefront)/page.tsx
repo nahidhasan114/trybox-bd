@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { getHomepageSections } from "@/lib/queries/products";
-import { getActiveCategories, debugCategoriesFetch } from "@/lib/queries/categories";
+import { getActiveCategories } from "@/lib/queries/categories";
 import { getSiteSettings } from "@/lib/site-settings";
 import { getSiteUrl } from "@/lib/site-url";
 import { HeroBanner } from "@/components/storefront/home/hero-banner";
@@ -43,13 +43,9 @@ export default async function HomePage() {
   ];
 
   const hasBanners = (banners?.length ?? 0) > 0;
-  const debugInfo = await debugCategoriesFetch();
 
   return (
     <>
-      <div id="temp-debug-info" style={{ display: "none" }}>
-        {debugInfo}
-      </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {hasBanners ? (
         <>
