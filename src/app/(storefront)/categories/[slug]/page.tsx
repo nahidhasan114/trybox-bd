@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
 import { getProductListing, type ListingFilters } from "@/lib/queries/listing";
+import { getCategoryBySlug, getActiveBrands } from "@/lib/queries/categories";
 import { FilterDrawer } from "@/components/storefront/listing/filter-drawer";
 import { FilterForm } from "@/components/storefront/listing/filter-form";
 import { SortSelect } from "@/components/storefront/listing/sort-select";
@@ -14,12 +14,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = await createClient();
-  const { data: category } = await supabase
-    .from("categories")
-    .select("name_bn, seo_title, seo_description")
-    .eq("slug", slug)
-    .maybeSingle();
+  const category = await getCategoryBySlug(slug);
 
   if (!category) return {};
   return {
@@ -37,23 +32,13 @@ export default async function CategoryPage({
 }) {
   const { slug } = await params;
   const searchParamsResolved = await searchParams;
-  const supabase = await createClient();
 
-  const { data: category } = await supabase
-    .from("categories")
-    .select("*")
-    .eq("slug", slug)
-    .eq("is_active", true)
-    .maybeSingle();
-
+  const category = await getCategoryBySlug(slug);
   if (!category) notFound();
 
   const filters: ListingFilters = { ...searchParamsResolved, category: slug };
 
-  const [{ data: brands }, listing] = await Promise.all([
-    supabase.from("brands").select("name, slug").eq("is_active", true).order("name"),
-    getProductListing(filters),
-  ]);
+  const [brands, listing] = await Promise.all([getActiveBrands(), getProductListing(filters)]);
 
   const siteUrl = getSiteUrl();
   const breadcrumbJsonLd = {
@@ -75,14 +60,14 @@ export default async function CategoryPage({
 
       <div className="mb-5 flex justify-end gap-2">
         <FilterDrawer>
-          <FilterForm action={`/categories/${slug}`} categories={[]} brands={brands ?? []} current={filters} />
+          <FilterForm action={`/categories/${slug}`} categories={[]} brands={brands} current={filters} />
         </FilterDrawer>
         <SortSelect />
       </div>
 
       <div className="flex gap-6">
         <div className="hidden lg:block">
-          <FilterForm action={`/categories/${slug}`} categories={[]} brands={brands ?? []} current={filters} />
+          <FilterForm action={`/categories/${slug}`} categories={[]} brands={brands} current={filters} />
         </div>
         <ListingResults
           products={listing.products}

@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 
 export type SiteSettings = {
@@ -38,12 +39,15 @@ const FALLBACK: SiteSettings = {
   seo_default_description: "",
 };
 
-export async function getSiteSettings(): Promise<SiteSettings> {
+export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   const supabase = await createClient();
-  const { data } = await supabase.from("site_settings").select("key, value");
+  const { data, error } = await supabase.from("site_settings").select("key, value");
 
   const settings = { ...FALLBACK };
-  if (!data) return settings;
+  if (error) {
+    console.error("getSiteSettings failed:", error.message);
+  }
+  if (!data || data.length === 0) return settings;
 
   for (const row of data) {
     if (row.key in settings) {
@@ -52,4 +56,4 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     }
   }
   return settings;
-}
+});

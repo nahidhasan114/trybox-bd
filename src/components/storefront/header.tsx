@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { User } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
 import { getSiteSettings } from "@/lib/site-settings";
+import { getActiveCategories } from "@/lib/queries/categories";
 import { MegaMenu } from "./mega-menu";
 import { MobileDrawer } from "./mobile-drawer";
 import { NavSearch } from "./nav-search";
@@ -17,16 +17,7 @@ const navLinks = [
 ];
 
 export async function Header() {
-  const supabase = await createClient();
-  const [settings, { data: categories }] = await Promise.all([
-    getSiteSettings(),
-    supabase
-      .from("categories")
-      .select("name_bn, slug")
-      .eq("is_active", true)
-      .order("display_order")
-      .limit(12),
-  ]);
+  const [settings, categories] = await Promise.all([getSiteSettings(), getActiveCategories()]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/95 backdrop-blur">
@@ -35,13 +26,13 @@ export async function Header() {
 
         <Link href="/" className="flex shrink-0 items-center gap-2">
           {settings.logo_url ? (
-            <Image src={settings.logo_url} alt={settings.business_name_bn} width={36} height={36} unoptimized className="rounded-lg" />
+            <Image src={settings.logo_url} alt={settings.business_name} width={36} height={36} unoptimized className="rounded-lg" />
           ) : (
             <span className="flex size-9 items-center justify-center rounded-lg bg-primary-600 text-sm font-bold text-white">
-              {settings.business_name_bn.slice(0, 1)}
+              {settings.business_name.slice(0, 1)}
             </span>
           )}
-          <span className="hidden text-lg font-semibold text-foreground sm:inline">{settings.business_name_bn}</span>
+          <span className="hidden text-lg font-semibold text-foreground sm:inline">{settings.business_name}</span>
         </Link>
 
         <nav className="hidden items-center gap-5 lg:flex">

@@ -1,15 +1,11 @@
 import Link from "next/link";
 import { MessageCircle, Phone, Mail, MapPin } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
 import { getSiteSettings } from "@/lib/site-settings";
+import { getActiveCategories } from "@/lib/queries/categories";
 import { FacebookIcon } from "@/components/icons/facebook-icon";
 
 export async function Footer() {
-  const supabase = await createClient();
-  const [settings, { data: categories }] = await Promise.all([
-    getSiteSettings(),
-    supabase.from("categories").select("name_bn, slug").eq("is_active", true).order("display_order").limit(8),
-  ]);
+  const [settings, categories] = await Promise.all([getSiteSettings(), getActiveCategories()]);
 
   const year = new Date().getFullYear();
 
@@ -55,7 +51,7 @@ export async function Footer() {
           <div>
             <h4 className="text-sm font-semibold text-foreground">Categories</h4>
             <ul className="mt-3 space-y-2 text-sm text-foreground/60">
-              {(categories ?? []).map((c) => (
+              {categories.slice(0, 8).map((c) => (
                 <li key={c.slug}>
                   <Link href={`/categories/${c.slug}`} className="transition-colors hover:text-primary-700">
                     {c.name_bn}

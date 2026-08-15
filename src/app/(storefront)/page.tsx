@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { getHomepageSections } from "@/lib/queries/products";
+import { getActiveCategories } from "@/lib/queries/categories";
 import { getSiteSettings } from "@/lib/site-settings";
 import { getSiteUrl } from "@/lib/site-url";
 import { HeroBanner } from "@/components/storefront/home/hero-banner";
@@ -11,9 +12,9 @@ import { ProductSection } from "@/components/storefront/home/product-section";
 export default async function HomePage() {
   const supabase = await createClient();
 
-  const [{ data: banners }, { data: categories }, sections, settings] = await Promise.all([
+  const [{ data: banners }, categories, sections, settings] = await Promise.all([
     supabase.from("banners").select("*").order("display_order"),
-    supabase.from("categories").select("*").eq("is_active", true).order("display_order"),
+    getActiveCategories(),
     getHomepageSections(),
     getSiteSettings(),
   ]);
@@ -55,7 +56,7 @@ export default async function HomePage() {
         <HeroFallback businessName={settings.business_name} />
       )}
       <TrustBenefits />
-      <CategoryGrid categories={categories ?? []} />
+      <CategoryGrid categories={categories} />
       <ProductSection title="নতুন পণ্য" viewAllHref="/shop?new=1" products={sections.newArrivals} />
       <ProductSection title="স্পেশাল কম্বো অফার" viewAllHref="/shop?type=combo" products={sections.comboOffers} tint />
       <ProductSection title="বেস্ট সেলার" viewAllHref="/shop?best=1" products={sections.bestSellers} />

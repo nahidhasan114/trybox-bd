@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { ProductCardData } from "@/components/storefront/product-card";
 
 const PRODUCT_SELECT =
-  "id, name_bn, slug, regular_price, sale_price, sale_starts_at, sale_ends_at, stock_quantity, manage_stock, has_variants, product_images(image_url, is_main), product_badge_links(product_badges(name_bn, color_hex))";
+  "id, name_bn, slug, regular_price, sale_price, sale_starts_at, sale_ends_at, stock_quantity, manage_stock, has_variants, is_featured, is_best_seller, is_new_arrival, is_free_delivery, product_type, sold_count, created_at, product_images(image_url, is_main), product_badge_links(product_badges(name_bn, color_hex))";
 
 type RawProduct = {
   id: string;
@@ -15,6 +15,13 @@ type RawProduct = {
   stock_quantity: number;
   manage_stock: boolean;
   has_variants: boolean;
+  is_featured?: boolean;
+  is_best_seller?: boolean;
+  is_new_arrival?: boolean;
+  is_free_delivery?: boolean;
+  product_type?: string;
+  sold_count?: number;
+  created_at?: string;
   product_images: { image_url: string; is_main: boolean }[] | null;
   product_badge_links: { product_badges: { name_bn: string; color_hex: string } | null }[] | null;
 };
@@ -42,20 +49,30 @@ function toCardData(p: RawProduct): ProductCardData {
 export async function getHomepageSections() {
   const supabase = await createClient();
 
-  const [featured, bestSellers, newArrivals, comboOffers, freeDelivery] = await Promise.all([
-    supabase.from("products").select(PRODUCT_SELECT).eq("status", "active").eq("is_featured", true).order("created_at", { ascending: false }).limit(8),
-    supabase.from("products").select(PRODUCT_SELECT).eq("status", "active").eq("is_best_seller", true).order("sold_count", { ascending: false }).limit(8),
-    supabase.from("products").select(PRODUCT_SELECT).eq("status", "active").eq("is_new_arrival", true).order("created_at", { ascending: false }).limit(8),
-    supabase.from("products").select(PRODUCT_SELECT).eq("status", "active").eq("product_type", "combo").order("created_at", { ascending: false }).limit(8),
-    supabase.from("products").select(PRODUCT_SELECT).eq("status", "active").eq("is_free_delivery", true).order("created_at", { ascending: false }).limit(8),
-  ]);
+  const { data, error } = await supabase
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .eq("status", "active")
+    .order("created_at", { ascending: false })
+    .limit(300);
+
+  if (error) console.error("getHomepageSections failed:", error.message);
+
+  const all = ((data as RawProduct[] | null) ?? []).map((p) => ({ raw: p, card: toCardData(p) }));
+
+  const take = (predicate: (p: RawProduct) => boolean, sortBy?: (a: RawProduct, b: RawProduct) => number) =>
+    all
+      .filter((x) => predicate(x.raw))
+      .sort((a, b) => (sortBy ? sortBy(a.raw, b.raw) : 0))
+      .slice(0, 8)
+      .map((x) => x.card);
 
   return {
-    featured: (featured.data ?? []).map(toCardData),
-    bestSellers: (bestSellers.data ?? []).map(toCardData),
-    newArrivals: (newArrivals.data ?? []).map(toCardData),
-    comboOffers: (comboOffers.data ?? []).map(toCardData),
-    freeDelivery: (freeDelivery.data ?? []).map(toCardData),
+    featured: take((p) => !!p.is_featured),
+    bestSellers: take((p) => !!p.is_best_seller, (a, b) => (b.sold_count ?? 0) - (a.sold_count ?? 0)),
+    newArrivals: take((p) => !!p.is_new_arrival),
+    comboOffers: take((p) => p.product_type === "combo"),
+    freeDelivery: take((p) => !!p.is_free_delivery),
   };
 }
 

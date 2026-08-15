@@ -1,5 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
 import { getProductListing, type ListingFilters } from "@/lib/queries/listing";
+import { getActiveCategories, getActiveBrands } from "@/lib/queries/categories";
 import { FilterDrawer } from "@/components/storefront/listing/filter-drawer";
 import { FilterForm } from "@/components/storefront/listing/filter-form";
 import { SortSelect } from "@/components/storefront/listing/sort-select";
@@ -13,11 +13,10 @@ export default async function ShopPage({
   searchParams: Promise<ListingFilters>;
 }) {
   const params = await searchParams;
-  const supabase = await createClient();
 
-  const [{ data: categories }, { data: brands }, listing] = await Promise.all([
-    supabase.from("categories").select("name_bn, slug").eq("is_active", true).order("display_order"),
-    supabase.from("brands").select("name, slug").eq("is_active", true).order("name"),
+  const [categories, brands, listing] = await Promise.all([
+    getActiveCategories(),
+    getActiveBrands(),
     getProductListing(params),
   ]);
 
