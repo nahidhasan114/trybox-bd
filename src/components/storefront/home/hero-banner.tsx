@@ -17,45 +17,54 @@ export function HeroBanner({ banners }: { banners: Tables<"banners">[] }) {
 
   if (banners.length === 0) return null;
 
-  const banner = banners[index];
-
-  const bannerContent = (
-    <>
-      <picture>
-        <source media="(max-width: 640px)" srcSet={banner.mobile_image_url ?? banner.desktop_image_url} />
-        <Image
-          src={banner.desktop_image_url}
-          alt={banner.title ?? ""}
-          fill
-          unoptimized
-          priority
-          className="object-cover"
-        />
-      </picture>
-      {(banner.title || banner.subtitle || banner.cta_text) && (
-        <div className="absolute inset-0 flex flex-col justify-center gap-2 bg-gradient-to-r from-black/50 via-black/10 to-transparent p-6 sm:p-10">
-          {banner.title && <h2 className="max-w-md text-xl font-semibold text-white sm:text-3xl">{banner.title}</h2>}
-          {banner.subtitle && <p className="max-w-sm text-sm text-white/90 sm:text-base">{banner.subtitle}</p>}
-          {banner.cta_text && (
-            <span className="mt-2 inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-sm font-medium text-foreground">
-              {banner.cta_text}
-            </span>
-          )}
-        </div>
-      )}
-    </>
-  );
-
   return (
     <section className="mx-auto max-w-7xl px-4 pt-4 sm:px-6">
-      <div className="relative overflow-hidden rounded-2xl bg-surface-muted">
-        {banner.cta_url ? (
-          <Link href={banner.cta_url} className="relative block aspect-[16/9] w-full sm:aspect-[21/8]">
-            {bannerContent}
-          </Link>
-        ) : (
-          <div className="relative block aspect-[16/9] w-full sm:aspect-[21/8]">{bannerContent}</div>
-        )}
+      <div className="relative h-[190px] w-full overflow-hidden rounded-2xl bg-surface-muted sm:h-[280px] lg:h-[360px]">
+        {banners.map((b, i) => {
+          const slideContent = (
+            <>
+              <picture>
+                <source media="(max-width: 640px)" srcSet={b.mobile_image_url ?? b.desktop_image_url} />
+                <Image
+                  src={b.desktop_image_url}
+                  alt={b.title ?? ""}
+                  fill
+                  unoptimized
+                  priority={i === 0}
+                  className="object-cover"
+                />
+              </picture>
+              {(b.title || b.subtitle || b.cta_text) && (
+                <div className="absolute inset-0 flex flex-col justify-center gap-2 bg-gradient-to-r from-black/50 via-black/10 to-transparent p-6 sm:p-10">
+                  {b.title && <h2 className="max-w-md text-xl font-semibold text-white sm:text-3xl">{b.title}</h2>}
+                  {b.subtitle && <p className="max-w-sm text-sm text-white/90 sm:text-base">{b.subtitle}</p>}
+                  {b.cta_text && (
+                    <span className="mt-2 inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-sm font-medium text-foreground">
+                      {b.cta_text}
+                    </span>
+                  )}
+                </div>
+              )}
+            </>
+          );
+
+          return (
+            <div
+              key={b.id}
+              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                i === index ? "opacity-100" : "pointer-events-none opacity-0"
+              }`}
+            >
+              {b.cta_url ? (
+                <Link href={b.cta_url} className="relative block size-full">
+                  {slideContent}
+                </Link>
+              ) : (
+                <div className="relative block size-full">{slideContent}</div>
+              )}
+            </div>
+          );
+        })}
 
         {banners.length > 1 && (
           <>
