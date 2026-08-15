@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getHomepageSections } from "@/lib/queries/products";
+import { getSiteSettings } from "@/lib/site-settings";
+import { getSiteUrl } from "@/lib/site-url";
 import { HeroBanner } from "@/components/storefront/home/hero-banner";
 import { TrustBenefits } from "@/components/storefront/home/trust-benefits";
 import { CategoryGrid } from "@/components/storefront/home/category-grid";
@@ -8,14 +10,40 @@ import { ProductSection } from "@/components/storefront/home/product-section";
 export default async function HomePage() {
   const supabase = await createClient();
 
-  const [{ data: banners }, { data: categories }, sections] = await Promise.all([
+  const [{ data: banners }, { data: categories }, sections, settings] = await Promise.all([
     supabase.from("banners").select("*").order("display_order"),
     supabase.from("categories").select("*").eq("is_active", true).order("display_order"),
     getHomepageSections(),
+    getSiteSettings(),
   ]);
+
+  const siteUrl = getSiteUrl();
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: settings.business_name,
+      url: siteUrl,
+      logo: settings.logo_url || undefined,
+      sameAs: [settings.facebook_url].filter(Boolean),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: settings.business_name,
+      url: siteUrl,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${siteUrl}/search?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ];
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <h1 className="sr-only">{settings.seo_default_title || settings.business_name_bn}</h1>
       <HeroBanner banners={banners ?? []} />
       <TrustBenefits />
       <CategoryGrid categories={categories ?? []} />

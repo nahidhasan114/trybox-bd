@@ -8,6 +8,7 @@ import { ProductGallery } from "@/components/storefront/product/product-gallery"
 import { PurchasePanel } from "@/components/storefront/product/purchase-panel";
 import { ProductTabs } from "@/components/storefront/product/product-tabs";
 import { ProductSection } from "@/components/storefront/home/product-section";
+import { getSiteUrl } from "@/lib/site-url";
 
 async function getProduct(slug: string) {
   const supabase = await createClient();
@@ -77,7 +78,9 @@ export default async function ProductDetailPage({
     related = ((data as RawProduct[] | null) ?? []).map(toCardData);
   }
 
-  const jsonLd = {
+  const siteUrl = getSiteUrl();
+
+  const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name_bn,
@@ -93,13 +96,38 @@ export default async function ProductDetailPage({
         product.manage_stock && product.stock_quantity <= 0
           ? "https://schema.org/OutOfStock"
           : "https://schema.org/InStock",
-      url: `/products/${product.slug}`,
+      url: `${siteUrl}/products/${product.slug}`,
     },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "হোম", item: siteUrl },
+      ...(product.category
+        ? [
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: product.category.name_bn,
+              item: `${siteUrl}/categories/${product.category.slug}`,
+            },
+          ]
+        : []),
+      {
+        "@type": "ListItem",
+        position: product.category ? 3 : 2,
+        name: product.name_bn,
+        item: `${siteUrl}/products/${product.slug}`,
+      },
+    ],
   };
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
       <nav className="mb-4 flex items-center gap-1 text-xs text-foreground/50">
         <Link href="/" className="hover:text-primary-700">হোম</Link>

@@ -6,6 +6,7 @@ import { FilterDrawer } from "@/components/storefront/listing/filter-drawer";
 import { FilterForm } from "@/components/storefront/listing/filter-form";
 import { SortSelect } from "@/components/storefront/listing/sort-select";
 import { ListingResults } from "@/components/storefront/listing/listing-results";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata({
   params,
@@ -54,8 +55,19 @@ export default async function CategoryPage({
     getProductListing(filters),
   ]);
 
+  const siteUrl = getSiteUrl();
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "হোম", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: category.name_bn, item: `${siteUrl}/categories/${category.slug}` },
+    ],
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <div className="mb-5">
         <h1 className="text-xl font-semibold text-foreground">{category.name_bn}</h1>
         {category.description_bn && <p className="mt-1 text-sm text-foreground/60">{category.description_bn}</p>}
