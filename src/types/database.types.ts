@@ -878,6 +878,7 @@ export type Database = {
           created_at: string
           display_order: number
           id: string
+          image_url: string | null
           is_active: boolean
           is_default: boolean
           product_id: string
@@ -887,12 +888,14 @@ export type Database = {
           stock_quantity: number
           updated_at: string
           variant_name: string
+          weight_grams: number | null
         }
         Insert: {
           attributes?: Json
           created_at?: string
           display_order?: number
           id?: string
+          image_url?: string | null
           is_active?: boolean
           is_default?: boolean
           product_id: string
@@ -902,12 +905,14 @@ export type Database = {
           stock_quantity?: number
           updated_at?: string
           variant_name: string
+          weight_grams?: number | null
         }
         Update: {
           attributes?: Json
           created_at?: string
           display_order?: number
           id?: string
+          image_url?: string | null
           is_active?: boolean
           is_default?: boolean
           product_id?: string
@@ -917,6 +922,7 @@ export type Database = {
           stock_quantity?: number
           updated_at?: string
           variant_name?: string
+          weight_grams?: number | null
         }
         Relationships: [
           {

@@ -15,7 +15,7 @@ async function getProduct(slug: string) {
   const { data } = await supabase
     .from("products")
     .select(
-      "*, category:categories(name_bn, slug), brand:brands(name, slug), images:product_images(image_url, is_main, display_order), variants:product_variants(id, variant_name, regular_price, sale_price, stock_quantity, is_default, is_active, display_order), videos:product_videos(video_url)",
+      "*, category:categories(name_bn, slug), brand:brands(name, slug), images:product_images(image_url, is_main, display_order), variants:product_variants(id, variant_name, regular_price, sale_price, stock_quantity, weight_grams, image_url, is_default, is_active, display_order), videos:product_videos(video_url)",
     )
     .eq("slug", slug)
     .eq("status", "active")

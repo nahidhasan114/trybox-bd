@@ -4,16 +4,19 @@ const KEY = "trybox_buy_now";
 
 export type BuyNowItem = { productId: string; variantId: string | null; quantity: number; customization: string[] | null };
 
-export function setBuyNowItem(item: BuyNowItem) {
-  window.sessionStorage.setItem(KEY, JSON.stringify(item));
+export function setBuyNowItems(items: BuyNowItem[]) {
+  window.sessionStorage.setItem(KEY, JSON.stringify(items));
 }
 
-export function getBuyNowItem(): BuyNowItem | null {
+export function getBuyNowItems(): BuyNowItem[] {
   try {
     const raw = window.sessionStorage.getItem(KEY);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed;
+    return parsed ? [parsed] : [];
   } catch {
-    return null;
+    return [];
   }
 }
 

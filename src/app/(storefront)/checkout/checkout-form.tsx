@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useCart, type CartLine } from "@/lib/cart/cart-context";
 import { useCartDetails } from "@/lib/cart/use-cart-details";
-import { getBuyNowItem, clearBuyNowItem } from "@/lib/cart/buy-now";
+import { getBuyNowItems, clearBuyNowItem } from "@/lib/cart/buy-now";
 import { submitOrder } from "@/lib/actions/checkout";
 import { formatBDT } from "@/lib/pricing";
 import { bdDivisions, bdDistrictsByDivision } from "@/lib/bd-locations";
@@ -46,11 +46,14 @@ export function CheckoutForm({ bkashNumber, nagadNumber }: { bkashNumber: string
   const [buyNowLine, setBuyNowLine] = useState<CartLine[] | null>(null);
   useEffect(() => {
     if (isBuyNow) {
-      const item = getBuyNowItem();
+      const items = getBuyNowItems();
       setBuyNowLine(
-        item
-          ? [{ productId: item.productId, variantId: item.variantId, quantity: item.quantity, customization: item.customization ?? null }]
-          : [],
+        items.map((item) => ({
+          productId: item.productId,
+          variantId: item.variantId,
+          quantity: item.quantity,
+          customization: item.customization ?? null,
+        })),
       );
     }
   }, [isBuyNow]);

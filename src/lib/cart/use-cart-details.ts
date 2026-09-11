@@ -33,7 +33,15 @@ type ProductData = {
   is_free_delivery: boolean;
   product_images: { image_url: string; is_main: boolean }[] | null;
   product_variants:
-    | { id: string; variant_name: string; regular_price: number | null; sale_price: number | null; stock_quantity: number }[]
+    | {
+        id: string;
+        variant_name: string;
+        regular_price: number | null;
+        sale_price: number | null;
+        stock_quantity: number;
+        weight_grams: number | null;
+        image_url: string | null;
+      }[]
     | null;
 };
 
@@ -58,7 +66,7 @@ export function useCartDetails(lines: CartLine[]) {
     supabase
       .from("products")
       .select(
-        "id, name_bn, slug, regular_price, sale_price, sale_starts_at, sale_ends_at, stock_quantity, manage_stock, weight_grams, is_free_delivery, product_images(image_url, is_main), product_variants(id, variant_name, regular_price, sale_price, stock_quantity)",
+        "id, name_bn, slug, regular_price, sale_price, sale_starts_at, sale_ends_at, stock_quantity, manage_stock, weight_grams, is_free_delivery, product_images(image_url, is_main), product_variants(id, variant_name, regular_price, sale_price, stock_quantity, weight_grams, image_url)",
       )
       .in("id", ids)
       .then(({ data }) => {
@@ -106,14 +114,14 @@ export function useCartDetails(lines: CartLine[]) {
         ...line,
         name: product.name_bn,
         slug: product.slug,
-        image: mainImage?.image_url ?? null,
+        image: variant?.image_url ?? mainImage?.image_url ?? null,
         variantName: variant?.variant_name ?? null,
         price,
         originalPrice,
         onSale,
         stock: variant ? variant.stock_quantity : product.stock_quantity,
         manageStock: product.manage_stock,
-        weightGrams: product.weight_grams ?? 500,
+        weightGrams: variant?.weight_grams ?? product.weight_grams ?? 500,
         isFreeDelivery: product.is_free_delivery,
       });
     }

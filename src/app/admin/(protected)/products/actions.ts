@@ -14,6 +14,8 @@ export type VariantFormValues = {
   regular_price: number | null;
   sale_price: number | null;
   stock_quantity: number;
+  weight_grams: number | null;
+  image_url: string;
   is_default: boolean;
   is_active: boolean;
   display_order: number;
@@ -104,6 +106,8 @@ async function saveChildren(
       regular_price: v.regular_price ?? null,
       sale_price: v.sale_price ?? null,
       stock_quantity: Number(v.stock_quantity) || 0,
+      weight_grams: v.weight_grams ?? null,
+      image_url: v.image_url || null,
       is_default: v.is_default,
       is_active: v.is_active,
       display_order: idx,

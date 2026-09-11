@@ -56,6 +56,8 @@ type ProductWithChildren = {
     regular_price: number | null;
     sale_price: number | null;
     stock_quantity: number;
+    weight_grams: number | null;
+    image_url: string | null;
     is_default: boolean;
     is_active: boolean;
   }[];
@@ -144,6 +146,8 @@ export function ProductForm({
         regular_price: v.regular_price,
         sale_price: v.sale_price,
         stock_quantity: v.stock_quantity,
+        weight_grams: v.weight_grams,
+        image_url: v.image_url ?? "",
         is_default: v.is_default,
         is_active: v.is_active,
         display_order: 0,
@@ -381,7 +385,10 @@ export function ProductForm({
       </Section>
 
       {hasVariants && (
-        <Section title="ভ্যারিয়েন্ট" description="প্রতিটি সাইজ/রং আলাদা সারিতে যোগ করুন">
+        <Section
+          title="ভ্যারিয়েন্ট"
+          description="প্রতিটি সাইজ/রং/খুচরা আইটেম আলাদা সারিতে যোগ করুন — কাস্টমার একাধিক ভ্যারিয়েন্ট বিভিন্ন পরিমাণে একসাথে কিনতে পারবেন (যেমন খুচরা ডায়াপার কম্বো)"
+        >
           <div className="space-y-3">
             {variantArray.fields.map((field, index) => (
               <div key={field.id} className="rounded-xl border border-border p-4">
@@ -397,7 +404,14 @@ export function ProductForm({
                     <Trash2 className="size-4" />
                   </button>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <Controller
+                  control={control}
+                  name={`variants.${index}.image_url`}
+                  render={({ field: f }) => (
+                    <ImageUploader bucket="product-images" label="ছবি (ঐচ্ছিক)" value={f.value} onChange={f.onChange} />
+                  )}
+                />
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   <div>
                     <FieldLabel>নাম (যেমন: S Size - 56pcs)</FieldLabel>
                     <Input {...register(`variants.${index}.variant_name`, { required: true })} />
@@ -434,6 +448,16 @@ export function ProductForm({
                     <FieldLabel>স্টক</FieldLabel>
                     <Input type="number" {...register(`variants.${index}.stock_quantity`, { valueAsNumber: true })} />
                   </div>
+                  <div>
+                    <FieldLabel>ওজন (গ্রাম, ঐচ্ছিক)</FieldLabel>
+                    <Input
+                      type="number"
+                      {...register(`variants.${index}.weight_grams`, {
+                        setValueAs: (v) => (v === "" ? null : Number(v)),
+                      })}
+                    />
+                    <p className="mt-1 text-xs text-foreground/40">খালি রাখলে প্রোডাক্টের মূল ওজন ব্যবহার হবে</p>
+                  </div>
                   <div className="flex items-end gap-4 pb-1">
                     <label className="flex items-center gap-1.5 text-sm text-foreground/70">
                       <input type="checkbox" className="size-4" {...register(`variants.${index}.is_default`)} />
@@ -459,6 +483,8 @@ export function ProductForm({
                   regular_price: null,
                   sale_price: null,
                   stock_quantity: 0,
+                  weight_grams: null,
+                  image_url: "",
                   is_default: variantArray.fields.length === 0,
                   is_active: true,
                   display_order: variantArray.fields.length,
