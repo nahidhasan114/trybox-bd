@@ -8,6 +8,7 @@ import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 export const dynamic = "force-dynamic";
+export const preferredRegion = "syd1";
 
 const bodyFont = Hind_Siliguri({
   variable: "--font-body",
