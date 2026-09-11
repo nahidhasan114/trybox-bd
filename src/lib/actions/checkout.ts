@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { notifyNewOrderOnTelegram } from "@/lib/telegram";
 
 export type CheckoutItem = {
   productId: string;
@@ -60,6 +61,24 @@ export async function submitOrder(input: CheckoutInput): Promise<CheckoutResult>
   }
 
   const result = data as { order_number: string; order_id: string; total_amount: number; discount_amount: number };
+
+  const { data: orderItems } = await supabase
+    .from("order_items")
+    .select("product_name, variant_name, quantity")
+    .eq("order_id", result.order_id);
+
+  await notifyNewOrderOnTelegram({
+    orderNumber: result.order_number,
+    customerName: input.customerName,
+    customerPhone: input.customerPhone,
+    address: input.fullAddress,
+    district: input.district,
+    division: input.division,
+    paymentMethod: input.paymentMethod,
+    totalAmount: result.total_amount,
+    items: orderItems ?? [],
+  });
+
   return {
     success: true,
     orderNumber: result.order_number,
