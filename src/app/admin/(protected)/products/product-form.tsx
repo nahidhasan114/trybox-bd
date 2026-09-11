@@ -162,6 +162,7 @@ export function ProductForm({
   const manageStock = watch("manage_stock");
   const selectedBadges = watch("badge_ids");
   const isCustomizable = watch("is_customizable");
+  const customizationOptionsText = watch("customization_options_text");
 
   const variantArray = useFieldArray({ control, name: "variants" });
   const imageArray = useFieldArray({ control, name: "images" });
@@ -360,6 +361,11 @@ export function ProductForm({
                 placeholder={"যেমন:\nডায়াপার - S\nডায়াপার - M\nবেবি ওয়াইপস\nফিডার বোতল"}
                 {...register("customization_options_text")}
               />
+              {!customizationOptionsText.trim() && (
+                <p className="mt-1.5 text-xs font-medium text-amber-600">
+                  ⚠️ অন্তত একটা অপশন যোগ না করলে কাস্টমার প্রোডাক্ট পেজে কিছুই দেখতে পাবেন না
+                </p>
+              )}
             </div>
             <div>
               <FieldLabel>কাস্টমার ঠিক কতটি অপশন বাছাই করবে</FieldLabel>
