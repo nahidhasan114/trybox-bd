@@ -24,7 +24,11 @@ export async function createClient() {
         },
       },
       global: {
-        fetch: (url, options = {}) => fetch(url, { ...options, cache: "no-store" }),
+        fetch: (url, options = {}) => {
+          const method = options.method?.toUpperCase() ?? "GET";
+          if (method !== "GET") return fetch(url, options);
+          return fetch(url, { ...options, next: { revalidate: 30 } });
+        },
       },
     },
   );
