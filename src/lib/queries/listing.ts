@@ -9,6 +9,7 @@ export type ListingFilters = {
   sort?: string;
   type?: string;
   badge?: string;
+  customizable?: string;
   best?: string;
   new?: string;
   featured?: string;
@@ -62,6 +63,7 @@ export async function getProductListing(filters: ListingFilters): Promise<{
   }
 
   if (filters.type) query = query.eq("product_type", filters.type);
+  if (filters.customizable === "1") query = query.eq("is_customizable", true);
   if (filters.best === "1") query = query.eq("is_best_seller", true);
   if (filters.new === "1") query = query.eq("is_new_arrival", true);
   if (filters.featured === "1") query = query.eq("is_featured", true);

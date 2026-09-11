@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { ProductCardData } from "@/components/storefront/product-card";
 
 const PRODUCT_SELECT =
-  "id, name_bn, slug, regular_price, sale_price, sale_starts_at, sale_ends_at, stock_quantity, manage_stock, has_variants, is_featured, is_best_seller, is_new_arrival, is_free_delivery, product_type, sold_count, created_at, product_images(image_url, is_main), product_badge_links(product_badges(name_bn, color_hex))";
+  "id, name_bn, slug, regular_price, sale_price, sale_starts_at, sale_ends_at, stock_quantity, manage_stock, has_variants, is_featured, is_best_seller, is_new_arrival, is_free_delivery, is_customizable, customization_options, product_type, sold_count, created_at, product_images(image_url, is_main), product_badge_links(product_badges(name_bn, color_hex))";
 
 type RawProduct = {
   id: string;
@@ -19,12 +19,18 @@ type RawProduct = {
   is_best_seller?: boolean;
   is_new_arrival?: boolean;
   is_free_delivery?: boolean;
+  is_customizable?: boolean;
+  customization_options?: unknown;
   product_type?: string;
   sold_count?: number;
   created_at?: string;
   product_images: { image_url: string; is_main: boolean }[] | null;
   product_badge_links: { product_badges: { name_bn: string; color_hex: string } | null }[] | null;
 };
+
+function hasCustomizationOptions(p: RawProduct) {
+  return !!p.is_customizable && Array.isArray(p.customization_options) && p.customization_options.length > 0;
+}
 
 function toCardData(p: RawProduct): ProductCardData {
   const mainImage = p.product_images?.find((i) => i.is_main) ?? p.product_images?.[0];
@@ -39,6 +45,7 @@ function toCardData(p: RawProduct): ProductCardData {
     stock_quantity: p.stock_quantity,
     manage_stock: p.manage_stock,
     has_variants: p.has_variants,
+    isCustomizable: hasCustomizationOptions(p),
     image: mainImage?.image_url ?? null,
     badges: (p.product_badge_links ?? [])
       .map((l) => l.product_badges)
@@ -79,6 +86,7 @@ export async function getHomepageSections() {
     ),
     hotDeals: take((p) => (p.product_badge_links ?? []).some((l) => l.product_badges?.name_bn === HOT_DEAL_BADGE_NAME)),
     hotDealBadgeId: hotDealBadge?.id ?? null,
+    customizableCombos: take(hasCustomizationOptions),
     featured: take((p) => !!p.is_featured),
     bestSellers: take((p) => !!p.is_best_seller, (a, b) => (b.sold_count ?? 0) - (a.sold_count ?? 0)),
     newArrivals: take((p) => !!p.is_new_arrival),

@@ -67,6 +67,13 @@ export default async function HomePage() {
         />
       )}
       <ProductSection title="স্পেশাল কম্বো অফার" viewAllHref="/shop?type=combo" products={sections.comboOffers} tint />
+      {sections.customizableCombos.length > 0 && (
+        <ProductSection
+          title="নিজের মতো সাজান"
+          viewAllHref="/shop?customizable=1"
+          products={sections.customizableCombos}
+        />
+      )}
       <ProductSection title="নতুন পণ্য" viewAllHref="/shop?new=1" products={sections.newArrivals} />
       <ProductSection title="ফিচার্ড প্রোডাক্ট" viewAllHref="/shop?featured=1" products={sections.featured} tint />
       <ProductSection title="ফ্রি ডেলিভারি প্রোডাক্ট" viewAllHref="/shop?free_delivery=1" products={sections.freeDelivery} />

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingCart, ImageOff } from "lucide-react";
+import { ShoppingCart, ImageOff, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "@/lib/cart/cart-context";
 import { getEffectivePrice, formatBDT } from "@/lib/pricing";
@@ -18,6 +18,7 @@ export type ProductCardData = {
   stock_quantity: number;
   manage_stock: boolean;
   has_variants: boolean;
+  isCustomizable: boolean;
   image: string | null;
   badges: { name_bn: string; color_hex: string }[];
 };
@@ -52,6 +53,11 @@ export function ProductCard({ product }: { product: ProductCardData }) {
         )}
 
         <div className="absolute left-2 top-2 flex flex-col gap-1">
+          {product.isCustomizable && (
+            <span className="flex items-center gap-1 rounded-full bg-gradient-to-r from-primary-600 to-accent-600 px-2 py-0.5 text-[11px] font-semibold text-white">
+              <Sparkles className="size-3" /> কাস্টমাইজেবল
+            </span>
+          )}
           {onSale && (
             <span className="rounded-full bg-accent-600 px-2 py-0.5 text-[11px] font-semibold text-white">
               -{discountPercent}%
