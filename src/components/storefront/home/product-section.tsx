@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { ProductCard, type ProductCardData } from "@/components/storefront/product-card";
+import { Reveal } from "@/components/ui/reveal";
 
 export function ProductSection({
   title,
@@ -31,8 +32,10 @@ export function ProductSection({
           </Link>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
+          {products.map((p, i) => (
+            <Reveal key={p.id} delay={Math.min(i, 7) * 50}>
+              <ProductCard product={p} />
+            </Reveal>
           ))}
         </div>
       </div>
