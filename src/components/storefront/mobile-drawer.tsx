@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, ChevronRight, Phone, Truck } from "lucide-react";
+import { Menu, X, ChevronRight, Phone, Truck, User } from "lucide-react";
 
 export type NavCategory = { name_bn: string; slug: string };
 
-export function MobileDrawer({ categories }: { categories: NavCategory[] }) {
+export function MobileDrawer({ categories, isLoggedIn = false }: { categories: NavCategory[]; isLoggedIn?: boolean }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -73,6 +73,13 @@ export function MobileDrawer({ categories }: { categories: NavCategory[] }) {
             </div>
 
             <div className="mt-auto flex flex-col gap-1 border-t border-border p-2">
+              <Link
+                href={isLoggedIn ? "/account" : "/login"}
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-foreground/80 hover:bg-surface-muted"
+              >
+                <User className="size-4" /> {isLoggedIn ? "আমার অ্যাকাউন্ট" : "লগইন / রেজিস্টার"}
+              </Link>
               <Link
                 href="/track-order"
                 onClick={() => setOpen(false)}

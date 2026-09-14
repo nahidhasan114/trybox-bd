@@ -3,6 +3,7 @@ import Image from "next/image";
 import { User } from "lucide-react";
 import { getSiteSettings } from "@/lib/site-settings";
 import { getActiveCategories } from "@/lib/queries/categories";
+import { createClient } from "@/lib/supabase/server";
 import { MegaMenu } from "./mega-menu";
 import { MobileDrawer } from "./mobile-drawer";
 import { NavSearch } from "./nav-search";
@@ -17,12 +18,17 @@ const navLinks = [
 ];
 
 export async function Header() {
-  const [settings, categories] = await Promise.all([getSiteSettings(), getActiveCategories()]);
+  const supabase = await createClient();
+  const [settings, categories, { data: { user } }] = await Promise.all([
+    getSiteSettings(),
+    getActiveCategories(),
+    supabase.auth.getUser(),
+  ]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6">
-        <MobileDrawer categories={categories ?? []} />
+        <MobileDrawer categories={categories ?? []} isLoggedIn={!!user} />
 
         <Link href="/" className="flex shrink-0 items-center gap-2">
           {settings.logo_url ? (
@@ -54,9 +60,10 @@ export async function Header() {
 
         <div className="ml-auto flex items-center gap-1">
           <Link
-            href="/track-order"
+            href={user ? "/account" : "/login"}
             className="hidden size-10 items-center justify-center rounded-full transition-colors hover:bg-surface-muted sm:flex"
-            aria-label="Account"
+            aria-label={user ? "আমার অ্যাকাউন্ট" : "লগইন"}
+            title={user ? "আমার অ্যাকাউন্ট" : "লগইন"}
           >
             <User className="size-5 text-foreground/70" />
           </Link>

@@ -1412,6 +1412,10 @@ export type Database = {
         Args: { p_order_number: string; p_phone: string }
         Returns: Json
       }
+      link_customer_account: {
+        Args: { p_full_name: string; p_phone: string; p_email: string }
+        Returns: Json
+      }
       create_order: {
         Args: {
           p_customer_name: string

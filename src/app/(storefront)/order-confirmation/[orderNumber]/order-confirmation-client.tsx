@@ -2,7 +2,7 @@
 
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, ShieldCheck, User, Wallet, MapPin, Truck, ShoppingBag, PackageSearch } from "lucide-react";
+import { CheckCircle2, ShieldCheck, User, Wallet, MapPin, Truck, ShoppingBag, PackageSearch, UserPlus } from "lucide-react";
 import { Input, FieldLabel } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { trackOrder, type TrackedOrder } from "@/lib/actions/track-order";
@@ -14,9 +14,11 @@ const LAST_ORDER_PHONE_KEY = "trybox_last_order_phone";
 export function OrderConfirmationClient({
   orderNumber,
   codTrustMessage,
+  isLoggedIn,
 }: {
   orderNumber: string;
   codTrustMessage: string;
+  isLoggedIn: boolean;
 }) {
   const [order, setOrder] = useState<TrackedOrder | null>(null);
   const [phone, setPhone] = useState("");
@@ -107,6 +109,26 @@ export function OrderConfirmationClient({
               <ShieldCheck className="size-5" />
             </span>
             <p className="text-sm leading-relaxed text-foreground/80">{codTrustMessage}</p>
+          </div>
+        )}
+
+        {!isLoggedIn && (
+          <div className="mt-6 flex flex-col items-start gap-3 rounded-2xl border border-border bg-surface-muted/60 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+            <div className="flex items-start gap-3">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary-600">
+                <UserPlus className="size-4.5" />
+              </span>
+              <div>
+                <p className="text-sm font-medium text-foreground">অর্ডার ট্র্যাক করতে ফ্রি অ্যাকাউন্ট বানান</p>
+                <p className="text-xs text-foreground/60">লগইন করলে আপনার সব অর্ডার এক জায়গায় দেখতে পারবেন</p>
+              </div>
+            </div>
+            <Link
+              href="/register"
+              className="flex h-10 w-full shrink-0 items-center justify-center rounded-full bg-primary-600 px-5 text-sm font-medium text-white hover:bg-primary-700 sm:w-auto"
+            >
+              ফ্রি রেজিস্টার করুন
+            </Link>
           </div>
         )}
 
