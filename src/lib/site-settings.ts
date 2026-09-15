@@ -19,6 +19,15 @@ export type SiteSettings = {
   seo_default_title: string;
   seo_default_description: string;
   cod_trust_message: string;
+  show_trust_benefits: boolean;
+  show_all_products: boolean;
+  show_best_sellers: boolean;
+  show_hot_deals: boolean;
+  show_combo_offers: boolean;
+  show_customizable_combos: boolean;
+  show_new_arrivals: boolean;
+  show_featured: boolean;
+  show_free_delivery: boolean;
 };
 
 const FALLBACK: SiteSettings = {
@@ -40,6 +49,15 @@ const FALLBACK: SiteSettings = {
   seo_default_description: "",
   cod_trust_message:
     "আমরা আপনার উপর বিশ্বাস করে ক্যাশ অন ডেলিভারিতে প্রোডাক্টটি পাঠাচ্ছি। অনুগ্রহ করে ডেলিভারির সময় প্রোডাক্টটি রিসিভ করবেন। আপনার বিশ্বাসই আমাদের সবচেয়ে বড় শক্তি।",
+  show_trust_benefits: true,
+  show_all_products: true,
+  show_best_sellers: true,
+  show_hot_deals: true,
+  show_combo_offers: true,
+  show_customizable_combos: true,
+  show_new_arrivals: true,
+  show_featured: true,
+  show_free_delivery: true,
 };
 
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {

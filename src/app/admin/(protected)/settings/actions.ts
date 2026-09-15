@@ -22,6 +22,15 @@ export type SettingsFormValues = {
   seo_default_title: string;
   seo_default_description: string;
   cod_trust_message: string;
+  show_trust_benefits: boolean;
+  show_all_products: boolean;
+  show_best_sellers: boolean;
+  show_hot_deals: boolean;
+  show_combo_offers: boolean;
+  show_customizable_combos: boolean;
+  show_new_arrivals: boolean;
+  show_featured: boolean;
+  show_free_delivery: boolean;
 };
 
 export async function updateSiteSettings(values: SettingsFormValues) {
@@ -67,6 +76,19 @@ export async function updateSiteSettings(values: SettingsFormValues) {
       updated_by: admin.id,
     },
     { key: "cod_trust_message", value: values.cod_trust_message, updated_by: admin.id },
+    { key: "show_trust_benefits", value: values.show_trust_benefits, updated_by: admin.id },
+    { key: "show_all_products", value: values.show_all_products, updated_by: admin.id },
+    { key: "show_best_sellers", value: values.show_best_sellers, updated_by: admin.id },
+    { key: "show_hot_deals", value: values.show_hot_deals, updated_by: admin.id },
+    { key: "show_combo_offers", value: values.show_combo_offers, updated_by: admin.id },
+    {
+      key: "show_customizable_combos",
+      value: values.show_customizable_combos,
+      updated_by: admin.id,
+    },
+    { key: "show_new_arrivals", value: values.show_new_arrivals, updated_by: admin.id },
+    { key: "show_featured", value: values.show_featured, updated_by: admin.id },
+    { key: "show_free_delivery", value: values.show_free_delivery, updated_by: admin.id },
   ];
 
   const { error } = await supabase.from("site_settings").upsert(rows, { onConflict: "key" });

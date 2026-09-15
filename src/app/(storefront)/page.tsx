@@ -55,28 +55,49 @@ export default async function HomePage() {
       ) : (
         <HeroFallback businessName={settings.business_name} />
       )}
-      <TrustBenefits />
+      {settings.show_trust_benefits && <TrustBenefits />}
       <CategoryGrid categories={categories} />
-      <ProductSection title="সব প্রোডাক্ট" viewAllHref="/shop" products={sections.allProducts} />
-      <ProductSection title="বেস্ট সেলার" viewAllHref="/shop?best=1" products={sections.bestSellers} tint />
-      {sections.hotDealBadgeId && (
+      {settings.show_all_products && (
+        <ProductSection title="সব প্রোডাক্ট" viewAllHref="/shop" products={sections.allProducts} />
+      )}
+      {settings.show_best_sellers && (
+        <ProductSection title="বেস্ট সেলার" viewAllHref="/shop?best=1" products={sections.bestSellers} tint />
+      )}
+      {settings.show_hot_deals && sections.hotDealBadgeId && (
         <ProductSection
           title="হট ডিল"
           viewAllHref={`/shop?badge=${sections.hotDealBadgeId}`}
           products={sections.hotDeals}
         />
       )}
-      <ProductSection title="স্পেশাল কম্বো অফার" viewAllHref="/shop?type=combo" products={sections.comboOffers} tint />
-      {sections.customizableCombos.length > 0 && (
+      {settings.show_combo_offers && (
+        <ProductSection
+          title="স্পেশাল কম্বো অফার"
+          viewAllHref="/shop?type=combo"
+          products={sections.comboOffers}
+          tint
+        />
+      )}
+      {settings.show_customizable_combos && sections.customizableCombos.length > 0 && (
         <ProductSection
           title="নিজের মতো সাজান"
           viewAllHref="/shop?customizable=1"
           products={sections.customizableCombos}
         />
       )}
-      <ProductSection title="নতুন পণ্য" viewAllHref="/shop?new=1" products={sections.newArrivals} />
-      <ProductSection title="ফিচার্ড প্রোডাক্ট" viewAllHref="/shop?featured=1" products={sections.featured} tint />
-      <ProductSection title="ফ্রি ডেলিভারি প্রোডাক্ট" viewAllHref="/shop?free_delivery=1" products={sections.freeDelivery} />
+      {settings.show_new_arrivals && (
+        <ProductSection title="নতুন পণ্য" viewAllHref="/shop?new=1" products={sections.newArrivals} />
+      )}
+      {settings.show_featured && (
+        <ProductSection title="ফিচার্ড প্রোডাক্ট" viewAllHref="/shop?featured=1" products={sections.featured} tint />
+      )}
+      {settings.show_free_delivery && (
+        <ProductSection
+          title="ফ্রি ডেলিভারি প্রোডাক্ট"
+          viewAllHref="/shop?free_delivery=1"
+          products={sections.freeDelivery}
+        />
+      )}
     </>
   );
 }

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Input, FieldLabel } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { ImageUploader } from "@/components/admin/image-uploader";
 import type { SiteSettings } from "@/lib/site-settings";
 import { updateSiteSettings, type SettingsFormValues } from "./actions";
@@ -48,6 +49,15 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
       seo_default_title: settings.seo_default_title,
       seo_default_description: settings.seo_default_description,
       cod_trust_message: settings.cod_trust_message,
+      show_trust_benefits: settings.show_trust_benefits,
+      show_all_products: settings.show_all_products,
+      show_best_sellers: settings.show_best_sellers,
+      show_hot_deals: settings.show_hot_deals,
+      show_combo_offers: settings.show_combo_offers,
+      show_customizable_combos: settings.show_customizable_combos,
+      show_new_arrivals: settings.show_new_arrivals,
+      show_featured: settings.show_featured,
+      show_free_delivery: settings.show_free_delivery,
     },
   });
 
@@ -158,6 +168,73 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
           <FieldLabel>Default SEO Description</FieldLabel>
           <Input {...register("seo_default_description")} />
         </div>
+      </Section>
+
+      <Section
+        title="হোমপেজে কি কি দেখাবেন"
+        description="বন্ধ করলে সেই সেকশনটা সাথে সাথে হোমপেজ থেকে সরে যাবে"
+      >
+        <Controller
+          control={control}
+          name="show_trust_benefits"
+          render={({ field }) => (
+            <Switch checked={field.value} onChange={field.onChange} label="Cash on Delivery / ট্রাস্ট বার" />
+          )}
+        />
+        <Controller
+          control={control}
+          name="show_all_products"
+          render={({ field }) => (
+            <Switch checked={field.value} onChange={field.onChange} label="সব প্রোডাক্ট" />
+          )}
+        />
+        <Controller
+          control={control}
+          name="show_best_sellers"
+          render={({ field }) => (
+            <Switch checked={field.value} onChange={field.onChange} label="বেস্ট সেলার" />
+          )}
+        />
+        <Controller
+          control={control}
+          name="show_hot_deals"
+          render={({ field }) => <Switch checked={field.value} onChange={field.onChange} label="হট ডিল" />}
+        />
+        <Controller
+          control={control}
+          name="show_combo_offers"
+          render={({ field }) => (
+            <Switch checked={field.value} onChange={field.onChange} label="স্পেশাল কম্বো অফার" />
+          )}
+        />
+        <Controller
+          control={control}
+          name="show_customizable_combos"
+          render={({ field }) => (
+            <Switch checked={field.value} onChange={field.onChange} label="নিজের মতো সাজান (কাস্টম কম্বো)" />
+          )}
+        />
+        <Controller
+          control={control}
+          name="show_new_arrivals"
+          render={({ field }) => (
+            <Switch checked={field.value} onChange={field.onChange} label="নতুন পণ্য" />
+          )}
+        />
+        <Controller
+          control={control}
+          name="show_featured"
+          render={({ field }) => (
+            <Switch checked={field.value} onChange={field.onChange} label="ফিচার্ড প্রোডাক্ট" />
+          )}
+        />
+        <Controller
+          control={control}
+          name="show_free_delivery"
+          render={({ field }) => (
+            <Switch checked={field.value} onChange={field.onChange} label="ফ্রি ডেলিভারি প্রোডাক্ট" />
+          )}
+        />
       </Section>
 
       <Button type="submit" loading={pending}>
