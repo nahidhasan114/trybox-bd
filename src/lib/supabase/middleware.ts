@@ -29,7 +29,10 @@ export async function updateSession(request: NextRequest) {
 
   const publicAdminPaths = ["/admin/login", "/admin/forgot-password", "/admin/reset-password"];
 
-  if (request.nextUrl.pathname.startsWith("/admin") && !publicAdminPaths.includes(request.nextUrl.pathname)) {
+  if (
+    request.nextUrl.pathname.startsWith("/admin") &&
+    !publicAdminPaths.some((p) => request.nextUrl.pathname === p || request.nextUrl.pathname.startsWith(`${p}/`))
+  ) {
     if (!user) {
       const url = request.nextUrl.clone();
       url.pathname = "/admin/login";
