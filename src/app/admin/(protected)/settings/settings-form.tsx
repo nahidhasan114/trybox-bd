@@ -58,6 +58,7 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
       show_new_arrivals: settings.show_new_arrivals,
       show_featured: settings.show_featured,
       show_free_delivery: settings.show_free_delivery,
+      contact_fab_channel: settings.contact_fab_channel,
     },
   });
 
@@ -125,6 +126,24 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
         <div>
           <FieldLabel>Messenger লিংক</FieldLabel>
           <Input {...register("messenger_url")} />
+        </div>
+      </Section>
+
+      <Section
+        title="ফ্লোটিং কন্টাক্ট বাটন"
+        description="সাইটের নিচে ডান কোণায় একটা মাত্র বাটন দেখাবে — কোনটা দেখাবেন বেছে নিন"
+      >
+        <div>
+          <FieldLabel>বাটন</FieldLabel>
+          <select
+            {...register("contact_fab_channel")}
+            className="h-11 w-full rounded-xl border border-border bg-surface px-4 text-sm"
+          >
+            <option value="whatsapp">WhatsApp</option>
+            <option value="messenger">Messenger</option>
+            <option value="phone">ফোন কল</option>
+            <option value="none">কিছুই না (বন্ধ)</option>
+          </select>
         </div>
       </Section>
 

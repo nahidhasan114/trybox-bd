@@ -31,6 +31,7 @@ export type SettingsFormValues = {
   show_new_arrivals: boolean;
   show_featured: boolean;
   show_free_delivery: boolean;
+  contact_fab_channel: "whatsapp" | "messenger" | "phone" | "none";
 };
 
 export async function updateSiteSettings(values: SettingsFormValues) {
@@ -89,6 +90,7 @@ export async function updateSiteSettings(values: SettingsFormValues) {
     { key: "show_new_arrivals", value: values.show_new_arrivals, updated_by: admin.id },
     { key: "show_featured", value: values.show_featured, updated_by: admin.id },
     { key: "show_free_delivery", value: values.show_free_delivery, updated_by: admin.id },
+    { key: "contact_fab_channel", value: values.contact_fab_channel, updated_by: admin.id },
   ];
 
   const { error } = await supabase.from("site_settings").upsert(rows, { onConflict: "key" });

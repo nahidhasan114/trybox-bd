@@ -28,6 +28,7 @@ export type SiteSettings = {
   show_new_arrivals: boolean;
   show_featured: boolean;
   show_free_delivery: boolean;
+  contact_fab_channel: "whatsapp" | "messenger" | "phone" | "none";
 };
 
 const FALLBACK: SiteSettings = {
@@ -58,6 +59,7 @@ const FALLBACK: SiteSettings = {
   show_new_arrivals: true,
   show_featured: true,
   show_free_delivery: true,
+  contact_fab_channel: "whatsapp",
 };
 
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {

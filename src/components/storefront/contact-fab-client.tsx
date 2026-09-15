@@ -1,27 +1,52 @@
 "use client";
 
 import { useState } from "react";
-import { MessageCircle, X, Send } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { MessageCircle, X, Send, Phone } from "lucide-react";
 
-export function ContactFabClient({
-  whatsappNumber,
-  messengerUrl,
-  businessName,
-}: {
-  whatsappNumber: string;
-  messengerUrl: string;
-  businessName: string;
-}) {
+type Props =
+  | { channel: "whatsapp"; whatsappNumber: string; businessName: string }
+  | { channel: "messenger"; messengerUrl: string }
+  | { channel: "phone"; phone: string };
+
+export function ContactFabClient(props: Props) {
   const [open, setOpen] = useState(false);
 
-  const waLink = whatsappNumber
-    ? `https://wa.me/88${whatsappNumber}?text=${encodeURIComponent(`Hi ${businessName}! আমার একটু সাহায্য দরকার।`)}`
-    : null;
+  if (props.channel === "messenger") {
+    return (
+      <div className="fixed bottom-4 right-4 z-30">
+        <a
+          href={props.messengerUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex size-12 items-center justify-center rounded-full bg-[#0084FF] text-white shadow-lg transition-transform hover:scale-105"
+          aria-label="Messenger"
+        >
+          <MessageCircle className="size-6" />
+        </a>
+      </div>
+    );
+  }
+
+  if (props.channel === "phone") {
+    return (
+      <div className="fixed bottom-4 right-4 z-30">
+        <a
+          href={`tel:${props.phone}`}
+          className="flex size-12 items-center justify-center rounded-full bg-primary-600 text-white shadow-lg transition-transform hover:scale-105"
+          aria-label="ফোন করুন"
+        >
+          <Phone className="size-6" />
+        </a>
+      </div>
+    );
+  }
+
+  const { whatsappNumber, businessName } = props;
+  const waLink = `https://wa.me/88${whatsappNumber}?text=${encodeURIComponent(`Hi ${businessName}! আমার একটু সাহায্য দরকার।`)}`;
 
   return (
     <div className="fixed bottom-4 right-4 z-30 flex flex-col items-end gap-2.5">
-      {open && waLink && (
+      {open && (
         <div className="w-72 max-w-[85vw] overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl">
           <div className="flex items-center justify-between bg-gradient-to-r from-[#25D366] to-[#1fb855] px-4 py-3">
             <div className="flex items-center gap-2">
@@ -61,31 +86,14 @@ export function ContactFabClient({
         </div>
       )}
 
-      <div className="flex flex-col gap-2.5">
-        {messengerUrl && (
-          <a
-            href={messengerUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex size-12 items-center justify-center rounded-full bg-[#0084FF] text-white shadow-lg transition-transform hover:scale-105"
-            aria-label="Messenger"
-          >
-            <MessageCircle className="size-6" />
-          </a>
-        )}
-        {waLink && (
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="relative flex size-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-105"
-            aria-label="WhatsApp"
-          >
-            {!open && <span className="absolute inset-0 animate-ping rounded-full bg-[#25D366]/60" />}
-            <span className="relative">
-              {open ? <X className="size-6" /> : <MessageCircle className="size-6" />}
-            </span>
-          </button>
-        )}
-      </div>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="relative flex size-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-105"
+        aria-label="WhatsApp"
+      >
+        {!open && <span className="absolute inset-0 animate-ping rounded-full bg-[#25D366]/60" />}
+        <span className="relative">{open ? <X className="size-6" /> : <MessageCircle className="size-6" />}</span>
+      </button>
     </div>
   );
 }
