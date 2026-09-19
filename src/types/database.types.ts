@@ -1412,6 +1412,21 @@ export type Database = {
         Args: { p_order_number: string; p_phone: string }
         Returns: Json
       }
+      get_monthly_order_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          month: string
+          total_orders: number
+          delivered_orders: number
+          cancelled_orders: number
+          revenue: number
+          archived: boolean
+        }[]
+      }
+      archive_and_delete_month: {
+        Args: { p_month: string }
+        Returns: Json
+      }
       link_customer_account: {
         Args: { p_full_name: string; p_phone: string; p_email: string }
         Returns: Json
