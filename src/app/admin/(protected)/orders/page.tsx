@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { ShoppingBag, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { formatBDT } from "@/lib/pricing";
 import { orderStatusLabels, paymentMethodLabels } from "@/lib/order-status";
+import { OrdersTable } from "./orders-table";
 
 const PAGE_SIZE = 20;
 
@@ -70,55 +70,7 @@ export default async function AdminOrdersPage({
         </Button>
       </form>
 
-      {!orders || orders.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border bg-surface p-10 text-center text-sm text-foreground/60">
-          <ShoppingBag className="mx-auto mb-2 size-8 text-foreground/30" />
-          কোনো অর্ডার পাওয়া যায়নি।
-        </div>
-      ) : (
-        <div className="overflow-x-auto rounded-2xl border border-border bg-surface">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-surface-muted text-left text-xs text-foreground/50">
-              <tr>
-                <th className="px-4 py-3 font-medium">অর্ডার</th>
-                <th className="px-4 py-3 font-medium">কাস্টমার</th>
-                <th className="px-4 py-3 font-medium">মোট</th>
-                <th className="px-4 py-3 font-medium">পেমেন্ট</th>
-                <th className="px-4 py-3 font-medium">স্ট্যাটাস</th>
-                <th className="px-4 py-3 font-medium">তারিখ</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {orders.map((o) => (
-                <tr key={o.id} className="hover:bg-surface-muted/50">
-                  <td className="px-4 py-3">
-                    <Link href={`/admin/orders/${o.id}`} className="font-medium text-primary-700 hover:underline">
-                      {o.order_number}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3">
-                    <p className="text-foreground">{o.customer_name}</p>
-                    <p className="text-xs text-foreground/50">{o.customer_phone}</p>
-                  </td>
-                  <td className="px-4 py-3 font-medium text-foreground">{formatBDT(o.total_amount)}</td>
-                  <td className="px-4 py-3 text-foreground/70">
-                    {paymentMethodLabels[o.payment_method] ?? o.payment_method}
-                    {o.payment_status === "paid" && <span className="ml-1 text-xs text-primary-600">✓ পরিশোধিত</span>}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="rounded-full bg-primary-50 px-2 py-0.5 text-xs text-primary-700">
-                      {orderStatusLabels[o.status] ?? o.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-xs text-foreground/50">
-                    {new Date(o.created_at).toLocaleDateString("bn-BD")}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <OrdersTable orders={orders ?? []} />
 
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2">
