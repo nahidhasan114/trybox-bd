@@ -9,7 +9,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input, FieldLabel, FieldError } from "@/components/ui/input";
+import { Input, PasswordInput, FieldLabel, FieldError } from "@/components/ui/input";
 
 const schema = z.object({
   email: z.string().min(1, "ইমেইল দিন").email("সঠিক ইমেইল ঠিকানা দিন"),
@@ -70,7 +70,7 @@ export default function LoginPage() {
           </div>
           <div>
             <FieldLabel>পাসওয়ার্ড</FieldLabel>
-            <Input type="password" placeholder="••••••••" {...register("password")} />
+            <PasswordInput placeholder="••••••••" {...register("password")} />
             <FieldError>{errors.password?.message}</FieldError>
           </div>
 

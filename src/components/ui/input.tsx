@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
-import type { InputHTMLAttributes } from "react";
+import { forwardRef, useState, type InputHTMLAttributes } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   error?: string;
@@ -17,6 +18,35 @@ export function Input({ className, error, ...props }: InputProps) {
     />
   );
 }
+
+export const PasswordInput = forwardRef<HTMLInputElement, Omit<InputProps, "type">>(
+  function PasswordInput({ className, error, ...props }, ref) {
+    const [visible, setVisible] = useState(false);
+    return (
+      <div className="relative">
+        <input
+          ref={ref}
+          type={visible ? "text" : "password"}
+          className={cn(
+            "h-11 w-full rounded-xl border border-border bg-surface px-4 pr-11 text-sm text-foreground placeholder:text-foreground/40 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100",
+            error && "border-red-400 focus:border-red-400 focus:ring-red-100",
+            className,
+          )}
+          {...props}
+        />
+        <button
+          type="button"
+          tabIndex={-1}
+          onClick={() => setVisible((v) => !v)}
+          aria-label={visible ? "পাসওয়ার্ড লুকান" : "পাসওয়ার্ড দেখান"}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground/70"
+        >
+          {visible ? <EyeOff className="size-4.5" /> : <Eye className="size-4.5" />}
+        </button>
+      </div>
+    );
+  },
+);
 
 export function FieldLabel({ children }: { children: React.ReactNode }) {
   return <label className="mb-1.5 block text-sm font-medium text-foreground/80">{children}</label>;

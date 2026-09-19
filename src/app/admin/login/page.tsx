@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input, FieldLabel, FieldError } from "@/components/ui/input";
+import { Input, PasswordInput, FieldLabel, FieldError } from "@/components/ui/input";
 
 const GATE_ANSWER = "boss114";
 const GATE_SESSION_KEY = "trybox_admin_gate_ok";
@@ -123,7 +123,7 @@ export default function AdminLoginPage() {
 
           <div>
             <FieldLabel>পাসওয়ার্ড</FieldLabel>
-            <Input type="password" placeholder="••••••••" {...register("password")} />
+            <PasswordInput placeholder="••••••••" {...register("password")} />
             <FieldError>{errors.password?.message}</FieldError>
           </div>
 

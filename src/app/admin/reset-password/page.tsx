@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { KeyRound } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input, FieldLabel, FieldError } from "@/components/ui/input";
+import { PasswordInput, FieldLabel, FieldError } from "@/components/ui/input";
 
 const schema = z
   .object({
@@ -68,12 +68,12 @@ export default function ResetPasswordPage() {
           <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <FieldLabel>নতুন পাসওয়ার্ড</FieldLabel>
-              <Input type="password" placeholder="••••••••" {...register("password")} />
+              <PasswordInput placeholder="••••••••" {...register("password")} />
               <FieldError>{errors.password?.message}</FieldError>
             </div>
             <div>
               <FieldLabel>পাসওয়ার্ড আবার লিখুন</FieldLabel>
-              <Input type="password" placeholder="••••••••" {...register("confirmPassword")} />
+              <PasswordInput placeholder="••••••••" {...register("confirmPassword")} />
               <FieldError>{errors.confirmPassword?.message}</FieldError>
             </div>
             <Button type="submit" className="w-full" loading={submitting}>

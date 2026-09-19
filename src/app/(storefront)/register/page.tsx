@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { MailCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input, FieldLabel, FieldError } from "@/components/ui/input";
+import { Input, PasswordInput, FieldLabel, FieldError } from "@/components/ui/input";
 
 const schema = z
   .object({
@@ -118,12 +118,12 @@ export default function RegisterPage() {
           </div>
           <div>
             <FieldLabel>পাসওয়ার্ড</FieldLabel>
-            <Input type="password" placeholder="••••••••" {...register("password")} />
+            <PasswordInput placeholder="••••••••" {...register("password")} />
             <FieldError>{errors.password?.message}</FieldError>
           </div>
           <div>
             <FieldLabel>পাসওয়ার্ড আবার লিখুন</FieldLabel>
-            <Input type="password" placeholder="••••••••" {...register("confirmPassword")} />
+            <PasswordInput placeholder="••••••••" {...register("confirmPassword")} />
             <FieldError>{errors.confirmPassword?.message}</FieldError>
           </div>
 
