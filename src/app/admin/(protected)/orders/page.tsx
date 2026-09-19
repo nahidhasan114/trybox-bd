@@ -13,7 +13,7 @@ export default async function AdminOrdersPage({
 }: {
   searchParams: Promise<{ q?: string; status?: string; payment?: string; page?: string }>;
 }) {
-  const { q = "", status = "", payment = "", page = "1" } = await searchParams;
+  const { q = "", status = "pending", payment = "", page = "1" } = await searchParams;
   const currentPage = Math.max(1, Number(page) || 1);
   const from = (currentPage - 1) * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
@@ -31,7 +31,7 @@ export default async function AdminOrdersPage({
     const safe = q.trim().replace(/[,()%*]/g, " ").trim();
     query = query.or(`order_number.ilike.%${safe}%,customer_phone.ilike.%${safe}%,customer_name.ilike.%${safe}%`);
   }
-  if (status) query = query.eq("status", status);
+  if (status && status !== "all") query = query.eq("status", status);
   if (payment) query = query.eq("payment_method", payment);
 
   const { data: orders, count } = await query;
@@ -50,7 +50,7 @@ export default async function AdminOrdersPage({
           <Input name="q" defaultValue={q} placeholder="অর্ডার নম্বর, ফোন বা নাম দিয়ে খুঁজুন" className="pl-10" />
         </div>
         <select name="status" defaultValue={status} className="h-11 rounded-xl border border-border bg-surface px-4 text-sm">
-          <option value="">সব স্ট্যাটাস</option>
+          <option value="all">সব স্ট্যাটাস</option>
           {Object.entries(orderStatusLabels).map(([value, label]) => (
             <option key={value} value={value}>
               {label}

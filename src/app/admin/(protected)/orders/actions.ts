@@ -21,12 +21,21 @@ export async function updateOrderStatus(orderId: string, newStatus: string, note
   const { error } = await supabase.from("orders").update({ status: newStatus }).eq("id", orderId);
   if (error) throw error;
 
-  await supabase.from("order_status_history").insert({
-    order_id: orderId,
-    status: newStatus,
-    note: note || null,
-    changed_by: admin.id,
-  });
+  await Promise.all([
+    supabase.from("order_status_history").insert({
+      order_id: orderId,
+      status: newStatus,
+      note: note || null,
+      changed_by: admin.id,
+    }),
+    supabase.from("admin_activity_logs").insert({
+      admin_id: admin.id,
+      action: "order_status_updated",
+      entity_type: "orders",
+      entity_id: orderId,
+      details: { status: newStatus },
+    }),
+  ]);
 
   if (shouldRestock) {
     const { data: items } = await supabase
@@ -73,14 +82,6 @@ export async function updateOrderStatus(orderId: string, newStatus: string, note
       });
     }
   }
-
-  await supabase.from("admin_activity_logs").insert({
-    admin_id: admin.id,
-    action: "order_status_updated",
-    entity_type: "orders",
-    entity_id: orderId,
-    details: { status: newStatus },
-  });
 
   revalidatePath(`/admin/orders/${orderId}`);
   revalidatePath("/admin/orders");

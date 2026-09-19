@@ -20,13 +20,17 @@ type Order = {
   created_at: string;
 };
 
-const statuses = Object.keys(orderStatusLabels);
+const actions = [
+  { value: "confirmed", label: "নিশ্চিত করুন" },
+  { value: "delivered", label: "ডেলিভারি সম্পন্ন" },
+  { value: "cancelled", label: "বাতিল করুন" },
+];
 
 function StatusCell({ order, onChanged }: { order: Order; onChanged: (orderId: string) => void }) {
   const [pending, startTransition] = useTransition();
 
   const handleChange = (newStatus: string) => {
-    if (newStatus === order.status) return;
+    if (!newStatus || newStatus === order.status) return;
     startTransition(async () => {
       try {
         await updateOrderStatus(order.id, newStatus, "");
@@ -39,19 +43,23 @@ function StatusCell({ order, onChanged }: { order: Order; onChanged: (orderId: s
   };
 
   return (
-    <select
-      value={order.status}
-      disabled={pending}
-      onChange={(e) => handleChange(e.target.value)}
-      onClick={(e) => e.stopPropagation()}
-      className="h-9 rounded-lg border border-border bg-surface px-2.5 text-xs text-foreground disabled:opacity-50"
-    >
-      {statuses.map((s) => (
-        <option key={s} value={s}>
-          {orderStatusLabels[s]}
-        </option>
-      ))}
-    </select>
+    <div className="flex items-center gap-2">
+      <select
+        value=""
+        disabled={pending}
+        onChange={(e) => handleChange(e.target.value)}
+        className="h-9 rounded-lg border border-border bg-surface px-2.5 text-xs text-foreground disabled:opacity-50"
+      >
+        <option value="">{pending ? "আপডেট হচ্ছে..." : orderStatusLabels[order.status] ?? order.status}</option>
+        {actions
+          .filter((a) => a.value !== order.status)
+          .map((a) => (
+            <option key={a.value} value={a.value}>
+              {a.label}
+            </option>
+          ))}
+      </select>
+    </div>
   );
 }
 
